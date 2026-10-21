@@ -1,28 +1,9 @@
 import UIKit
-import Turbolinks
-import SafariServices
-import WebKit
+import UserNotifications
 import SideMenu
 import AMScrollingNavbar
-import XCGLogger
 
-let log: XCGLogger = {
-    let log = XCGLogger.default
-    #if DEBUG
-        log.outputLevel = .debug
-        log.levelDescriptions[.verbose] = "🗯"
-        log.levelDescriptions[.debug] = "🔹"
-        log.levelDescriptions[.info] = "ℹ️"
-        log.levelDescriptions[.warning] = "⚠️"
-        log.levelDescriptions[.error] = "‼️"
-        log.levelDescriptions[.severe] = "💣"
-    #else
-        log.outputLevel = .none
-    #endif
-    return log
-}()
-
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
@@ -45,8 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navigationController.view.backgroundColor = UIColor.white
         window?.rootViewController = navigationController
 
-        let notificationSettings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
-        application.registerUserNotificationSettings(notificationSettings)
+        // 请求推送权限并注册远程推送（替代已废弃的 UIUserNotificationSettings）
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { (_, _) in
+        }
+        UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
 
         if let launchOptions = launchOptions, let _ = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] {
@@ -67,22 +50,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        if application.applicationState == .inactive {
-            // 应用在后台时，点击系推送消息启动应用
-            rootViewController.displayNotifications()
-        } else {
-            OAuth2.shared.refreshUnreadNotifications()
-        }
+        OAuth2.shared.refreshUnreadNotifications()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         OAuth2.shared.refreshUnreadNotifications()
     }
-    
+
     func applicationWillResignActive(_ application: UIApplication) {
         UIApplication.shared.applicationIconBadgeNumber = OAuth2.shared.unreadNotificationCount
     }
 
+}
+
+// MARK: - UNUserNotificationCenterDelegate
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    /// 应用在前台收到推送
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        OAuth2.shared.refreshUnreadNotifications()
+        completionHandler([.badge, .sound, .alert])
+    }
+
+    /// 点击推送消息
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        rootViewController.displayNotifications()
+        completionHandler()
+    }
 }
 
 extension UINavigationBar {
@@ -107,7 +101,7 @@ extension UIToolbar {
             self.barStyle = .default
             self.tintColor = PRIMARY_COLOR
             self.barTintColor = TABBAR_BG_COLOR
-            
+
             let navBorder = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.size.width, height: 1))
             navBorder.backgroundColor = NAVBAR_BORDER_COLOR
             self.addSubview(navBorder)
@@ -136,6 +130,6 @@ extension UITabBar {
 extension UIApplication {
     /// 获取应用主UINavigationController
     static var appNavigationController: ScrollingNavigationController {
-        return UIApplication.shared.keyWindow!.rootViewController as! ScrollingNavigationController
+        return keyWindow!.rootViewController as! ScrollingNavigationController
     }
 }

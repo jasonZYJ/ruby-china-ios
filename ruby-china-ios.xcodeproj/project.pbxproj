@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -59,7 +59,16 @@
 		967684771D45D88300EC9BD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967684761D45D88300EC9BD9 /* Constants.swift */; };
 		969E3CE21D448676004D7403 /* ErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969E3CE11D448676004D7403 /* ErrorView.xib */; };
 		96F9FD6B1D59A168004FD824 /* PopupWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F9FD6A1D59A168004FD824 /* PopupWebViewController.swift */; };
-		E8009FD8B1AB73F4FB8C336F /* Pods_ruby_china_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8873230E620CCF5BBCEE42 /* Pods_ruby_china_ios.framework */; };
+		F1EE00000000000000000001 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000001 /* Log.swift */; };
+		F1EE00000000000000000002 /* MiniRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000002 /* MiniRouter.swift */; };
+		F1AA00000000000000000001 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000001 /* SnapKit */; };
+		F1AA00000000000000000002 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000002 /* SwiftyJSON */; };
+		F1AA00000000000000000003 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000003 /* Kingfisher */; };
+		F1AA00000000000000000004 /* SideMenu in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000004 /* SideMenu */; };
+		F1AA00000000000000000005 /* MBProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000005 /* MBProgressHUD */; };
+		F1AA00000000000000000006 /* MJRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000006 /* MJRefresh */; };
+		F1AA00000000000000000007 /* AMScrollingNavbar in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000007 /* AMScrollingNavbar */; };
+		F1AA00000000000000000008 /* SKPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000008 /* SKPhotoBrowser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,7 +85,6 @@
 		24742CDC1D50FE2E00D16CA9 /* NewTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewTopicViewController.swift; sourceTree = "<group>"; };
 		24742CDD1D50FE2E00D16CA9 /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		24742CDE1D50FE2E00D16CA9 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		24742CDF1D50FE2E00D16CA9 /* SideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuNavigationController.swift; sourceTree = "<group>"; };
 		24742CE01D50FE2E00D16CA9 /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		24742CE11D50FE2E00D16CA9 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		24742CE31D50FE2E00D16CA9 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -111,8 +119,8 @@
 		24F8FA9C1DEFE00800D5F57A /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		24FDFBBB1DBBAE06004BB9A6 /* UIBarButtonItem+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Ext.swift"; sourceTree = "<group>"; };
 		24FDFBBD1DBBB53D004BB9A6 /* Ruby China.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ruby China.entitlements"; sourceTree = "<group>"; };
-		27849C620AD961F60F073D43 /* Pods-ruby-china-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ruby-china-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-ruby-china-ios/Pods-ruby-china-ios.release.xcconfig"; sourceTree = "<group>"; };
-		3D8873230E620CCF5BBCEE42 /* Pods_ruby_china_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ruby_china_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1DD00000000000000000001 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		F1DD00000000000000000002 /* MiniRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniRouter.swift; sourceTree = "<group>"; };
 		961580A61D477A7600B32BDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9670F18C1D4235D200128F8A /* Ruby China.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ruby China.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9670F18F1D4235D200128F8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,7 +129,6 @@
 		967684761D45D88300EC9BD9 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		969E3CE11D448676004D7403 /* ErrorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ErrorView.xib; sourceTree = "<group>"; };
 		96F9FD6A1D59A168004FD824 /* PopupWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupWebViewController.swift; sourceTree = "<group>"; };
-		C095BB2F4502B2B10DA854CC /* Pods-ruby-china-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ruby-china-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ruby-china-ios/Pods-ruby-china-ios.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +136,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8009FD8B1AB73F4FB8C336F /* Pods_ruby_china_ios.framework in Frameworks */,
+				F1AA00000000000000000001 /* SnapKit in Frameworks */,
+				F1AA00000000000000000002 /* SwiftyJSON in Frameworks */,
+				F1AA00000000000000000003 /* Kingfisher in Frameworks */,
+				F1AA00000000000000000004 /* SideMenu in Frameworks */,
+				F1AA00000000000000000005 /* MBProgressHUD in Frameworks */,
+				F1AA00000000000000000006 /* MJRefresh in Frameworks */,
+				F1AA00000000000000000007 /* AMScrollingNavbar in Frameworks */,
+				F1AA00000000000000000008 /* SKPhotoBrowser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,7 +159,6 @@
 				24742CDD1D50FE2E00D16CA9 /* NotificationsViewController.swift */,
 				24742CDE1D50FE2E00D16CA9 /* RootViewController.swift */,
 				245CCE6A1DB21A9E00428C2F /* RootTopicsViewController.swift */,
-				24742CDF1D50FE2E00D16CA9 /* SideMenuNavigationController.swift */,
 				24742CE01D50FE2E00D16CA9 /* SideMenuViewController.swift */,
 				24742CE11D50FE2E00D16CA9 /* SignInViewController.swift */,
 				24654AE11DAFCE3800BF912B /* TopicsViewController.swift */,
@@ -174,6 +187,8 @@
 				24742CE71D50FE2E00D16CA9 /* OAuth2.swift */,
 				24742CE81D50FE2E00D16CA9 /* TurbolinksSessionLib.swift */,
 				24DE002A1DC1CA2C004AA741 /* CustomSKImageCache.swift */,
+				F1DD00000000000000000001 /* Log.swift */,
+				F1DD00000000000000000002 /* MiniRouter.swift */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -219,7 +234,6 @@
 		697FC324893655A09B22EB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3D8873230E620CCF5BBCEE42 /* Pods_ruby_china_ios.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -242,7 +256,6 @@
 			children = (
 				9670F18E1D4235D200128F8A /* ruby-china-ios */,
 				9670F18D1D4235D200128F8A /* Products */,
-				D75ADDEB9F2D0E7BEA5059E6 /* Pods */,
 				697FC324893655A09B22EB35 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -271,15 +284,6 @@
 			path = "ruby-china-ios";
 			sourceTree = "<group>";
 		};
-		D75ADDEB9F2D0E7BEA5059E6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C095BB2F4502B2B10DA854CC /* Pods-ruby-china-ios.debug.xcconfig */,
-				27849C620AD961F60F073D43 /* Pods-ruby-china-ios.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -287,11 +291,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9670F19E1D4235D200128F8A /* Build configuration list for PBXNativeTarget "ruby-china-ios" */;
 			buildPhases = (
-				4DF31C8E3D733AA7E3104E8F /* [CP] Check Pods Manifest.lock */,
 				9670F1881D4235D200128F8A /* Sources */,
 				9670F1891D4235D200128F8A /* Frameworks */,
 				9670F18A1D4235D200128F8A /* Resources */,
-				A493C2F4C2D843A7EC1873C7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -314,7 +316,7 @@
 				TargetAttributes = {
 					9670F18B1D4235D200128F8A = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = A38T799N53;
+						DevelopmentTeam = 7CXESGH8YF;
 						LastSwiftMigration = 1130;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -343,6 +345,16 @@
 			productRefGroup = 9670F18D1D4235D200128F8A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				F1CC00000000000000000001 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				F1CC00000000000000000002 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				F1CC00000000000000000003 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				F1CC00000000000000000004 /* XCRemoteSwiftPackageReference "SideMenu" */,
+				F1CC00000000000000000005 /* XCRemoteSwiftPackageReference "MBProgressHUD" */,
+				F1CC00000000000000000006 /* XCRemoteSwiftPackageReference "MJRefresh" */,
+				F1CC00000000000000000007 /* XCRemoteSwiftPackageReference "AMScrollingNavbar" */,
+				F1CC00000000000000000008 /* XCRemoteSwiftPackageReference "SKPhotoBrowser" */,
+			);
 			targets = (
 				9670F18B1D4235D200128F8A /* ruby-china-ios */,
 			);
@@ -364,81 +376,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		4DF31C8E3D733AA7E3104E8F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ruby-china-ios-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A493C2F4C2D843A7EC1873C7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ruby-china-ios/Pods-ruby-china-ios-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AMScrollingNavbar/AMScrollingNavbar.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
-				"${BUILT_PRODUCTS_DIR}/Heimdallr/Heimdallr.framework",
-				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
-				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
-				"${BUILT_PRODUCTS_DIR}/Router/Router.framework",
-				"${BUILT_PRODUCTS_DIR}/SKPhotoBrowser/SKPhotoBrowser.framework",
-				"${BUILT_PRODUCTS_DIR}/SideMenu/SideMenu.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
-				"${BUILT_PRODUCTS_DIR}/SwipeTransition/SwipeTransition.framework",
-				"${BUILT_PRODUCTS_DIR}/SwipeTransitionAutoSwipeBack/SwipeTransitionAutoSwipeBack.framework",
-				"${BUILT_PRODUCTS_DIR}/Turbolinks/Turbolinks.framework",
-				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
-				"${BUILT_PRODUCTS_DIR}/YYKeyboardManager/YYKeyboardManager.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AMScrollingNavbar.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Heimdallr.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Router.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SKPhotoBrowser.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SideMenu.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeTransition.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeTransitionAutoSwipeBack.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turbolinks.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKeyboardManager.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ruby-china-ios/Pods-ruby-china-ios-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		9670F1881D4235D200128F8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -456,7 +393,6 @@
 				24B058822052DAE90086B6E1 /* NotificationName+Ext.swift in Sources */,
 				24742CEF1D50FE2E00D16CA9 /* EditAccountViewController.swift in Sources */,
 				24887F371DBB2FBD00BB7EDC /* TopicsFilterViewController.swift in Sources */,
-				24742CF51D50FE2E00D16CA9 /* SideMenuNavigationController.swift in Sources */,
 				24887F3B1DBB38A000BB7EDC /* TopicsFilterNodeSectionHeaderView.swift in Sources */,
 				24FDFBBC1DBBAE06004BB9A6 /* UIBarButtonItem+Ext.swift in Sources */,
 				24742CF01D50FE2E00D16CA9 /* EditReplyViewController.swift in Sources */,
@@ -491,6 +427,8 @@
 				24742CFB1D50FE2E00D16CA9 /* DeviceService.swift in Sources */,
 				24742CFF1D50FE2E00D16CA9 /* Error.swift in Sources */,
 				24DE002B1DC1CA2C004AA741 /* CustomSKImageCache.swift in Sources */,
+				F1EE00000000000000000001 /* Log.swift in Sources */,
+				F1EE00000000000000000002 /* MiniRouter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,6 +453,116 @@
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F1CC00000000000000000001 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		F1CC00000000000000000002 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+		F1CC00000000000000000003 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		F1CC00000000000000000004 /* XCRemoteSwiftPackageReference "SideMenu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jonkykong/SideMenu.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.6;
+			};
+		};
+		F1CC00000000000000000005 /* XCRemoteSwiftPackageReference "MBProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jdg/MBProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+		F1CC00000000000000000006 /* XCRemoteSwiftPackageReference "MJRefresh" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoderMJLee/MJRefresh.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.7.6;
+			};
+		};
+		F1CC00000000000000000007 /* XCRemoteSwiftPackageReference "AMScrollingNavbar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/andreamazz/AMScrollingNavbar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.5.2;
+			};
+		};
+		F1CC00000000000000000008 /* XCRemoteSwiftPackageReference "SKPhotoBrowser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/suzuki-0000/SKPhotoBrowser.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F1BB00000000000000000001 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000001 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		F1BB00000000000000000002 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000002 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		F1BB00000000000000000003 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000003 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		F1BB00000000000000000004 /* SideMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000004 /* XCRemoteSwiftPackageReference "SideMenu" */;
+			productName = SideMenu;
+		};
+		F1BB00000000000000000005 /* MBProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000005 /* XCRemoteSwiftPackageReference "MBProgressHUD" */;
+			productName = MBProgressHUD;
+		};
+		F1BB00000000000000000006 /* MJRefresh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000006 /* XCRemoteSwiftPackageReference "MJRefresh" */;
+			productName = MJRefresh;
+		};
+		F1BB00000000000000000007 /* AMScrollingNavbar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000007 /* XCRemoteSwiftPackageReference "AMScrollingNavbar" */;
+			productName = AMScrollingNavbar;
+		};
+		F1BB00000000000000000008 /* SKPhotoBrowser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F1CC00000000000000000008 /* XCRemoteSwiftPackageReference "SKPhotoBrowser" */;
+			productName = SKPhotoBrowser;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		9670F19C1D4235D200128F8A /* Debug */ = {
@@ -546,8 +594,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -566,12 +612,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -604,8 +650,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -618,30 +662,30 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		9670F19F1D4235D200128F8A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C095BB2F4502B2B10DA854CC /* Pods-ruby-china-ios.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CODE_SIGN_STYLE = Automatic;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ruby-china-ios/Ruby China.entitlements";
 				CURRENT_PROJECT_VERSION = 71;
-				DEVELOPMENT_TEAM = A38T799N53;
+				DEVELOPMENT_TEAM = 7CXESGH8YF;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "ruby-china-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.2.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"DEBUG\"";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.ruby-china.app";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.ruby-china.app.zyj";
 				PRODUCT_NAME = "Ruby China";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -650,18 +694,18 @@
 		};
 		9670F1A01D4235D200128F8A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27849C620AD961F60F073D43 /* Pods-ruby-china-ios.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				CODE_SIGN_STYLE = Automatic;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ruby-china-ios/Ruby China.entitlements";
 				CURRENT_PROJECT_VERSION = 71;
-				DEVELOPMENT_TEAM = A38T799N53;
+				DEVELOPMENT_TEAM = 7CXESGH8YF;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "ruby-china-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.2.4;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.ruby-china.app";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.ruby-china.app.zyj";
 				PRODUCT_NAME = "Ruby China";
 				SWIFT_VERSION = 5.0;
 			};

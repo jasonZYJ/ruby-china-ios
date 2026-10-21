@@ -9,7 +9,6 @@
 import UIKit
 import SnapKit
 import Kingfisher
-import FontAwesome_swift
 
 private let kContentPadding = UIEdgeInsets(top: 15, left: 25, bottom: 15, right: 25)
 private let kTitleTextSize: CGFloat = 16
@@ -51,7 +50,7 @@ class TopicCell: UITableViewCell {
                 nodeButton.setTitle(data.nodeName, for: .normal)
                 userNameButton.setTitle(data.user.login, for: .normal)
             } else {
-                avatarImageView.kf.setImage(with: nil)
+                avatarImageView.kf.setImage(with: nil as URL?)
                 titleLabel.attributedText = nil
                 repliesCountLabel.text = nil
                 nodeButton.setTitle(nil, for: .normal)
@@ -161,22 +160,24 @@ extension TopicCell {
     fileprivate func titleAttributedText(_ data: Topic) -> NSAttributedString {
         let attributes = [NSAttributedString.Key.font : kTitleTextFont]
         let attributedString = NSMutableAttributedString(string: data.title, attributes: attributes)
-        
-        func addIcon(name fontAwesomeName: FontAwesome, color: UIColor) {
-            let attributes = [NSAttributedString.Key.font : UIFont.fontAwesome(ofSize: kTitleTextSize, style: .solid),
-                              NSAttributedString.Key.foregroundColor : color]
-            let diamondString = "  \(String.fontAwesomeIcon(name: fontAwesomeName))"
-            let diamondAttributed = NSAttributedString(string: diamondString, attributes: attributes)
-            attributedString.append(diamondAttributed)
+
+        func addIcon(systemName: String, color: UIColor) {
+            guard let image = UIImage(systemName: systemName)?.withTintColor(color, renderingMode: .alwaysOriginal) else {
+                return
+            }
+            let attachment = NSTextAttachment()
+            attachment.image = image
+            attachment.bounds = CGRect(x: 0, y: -2, width: kTitleTextSize * 0.9, height: kTitleTextSize * 0.9)
+            attributedString.append(NSAttributedString(attachment: attachment))
         }
-        
+
         if data.excellent {
-            addIcon(name: .gem, color: kNodeColor)
+            addIcon(systemName: "seal.fill", color: kNodeColor)
         }
         if data.closedAt != nil {
-            addIcon(name: .check, color: kNodeColor)
+            addIcon(systemName: "checkmark.circle.fill", color: kNodeColor)
         }
-        
+
         return attributedString
     }
     

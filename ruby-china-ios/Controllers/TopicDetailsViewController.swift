@@ -41,9 +41,10 @@ class TopicDetailsViewController: WebViewController {
     }
     
     func setToolbars() {
-        let statusBarView = UIView(frame: UIApplication.shared.statusBarFrame)
+        let statusBarView = UIView(frame: view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
         let statusBarColor = UIColor.white
         statusBarView.backgroundColor = statusBarColor
+        statusBarView.autoresizingMask = .flexibleWidth
         view.addSubview(statusBarView)
 
         let (backItem, _) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "back"), target: self, action: #selector(backAction))

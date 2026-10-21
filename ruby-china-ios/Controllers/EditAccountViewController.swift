@@ -9,6 +9,6 @@ class EditAccountViewController: PopupWebViewController {
     }
     
     @objc func actionSubmit() {
-        visitableView.webView?.evaluateJavaScript("$('form.edit_user').first().submit()", completionHandler: nil)
+        webView?.evaluateJavaScript("$('form.edit_user').first().submit()", completionHandler: nil)
     }
 }

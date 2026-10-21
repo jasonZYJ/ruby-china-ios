@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Router
 import Kingfisher
 
 class SideMenuViewController: UITableViewController {
@@ -123,9 +122,12 @@ extension SideMenuViewController {
             // 下载用户头像
             let avatarSize = CGSize(width: 44, height: 44)
             let imageProcessor = RoundCornerImageProcessor(cornerRadius: avatarSize.width * 0.5, targetSize: avatarSize)
-            var retrieveImageOver = false
-            KingfisherManager.shared.retrieveImage(with: user.avatarUrl, options: [.processor(imageProcessor)], progressBlock: nil, completionHandler: { [weak self] (image, error, cacheType, imageURL) in
-                guard let `self` = self, let image = image, let cgImage = image.cgImage else {
+            KingfisherManager.shared.retrieveImage(with: .network(user.avatarUrl), options: [.processor(imageProcessor)], completionHandler: { [weak self] (result) in
+                guard let self = self, case .success(let value) = result else {
+                    return
+                }
+                let image = value.image
+                guard let cgImage = image.cgImage else {
                     return
                 }
                 let avatarImage = UIImage(cgImage: cgImage, scale: 2, orientation: image.imageOrientation)
@@ -133,12 +135,9 @@ extension SideMenuViewController {
                 let oldData = self.datas[kUserSection][row]
                 let newData = ItemData(name: oldData.name, image: avatarImage, imageColor: oldData.imageColor, actionURL: oldData.actionURL)
                 self.datas[kUserSection][row] = newData
-                if retrieveImageOver {
-                    let indexPath = IndexPath(row: row, section: kUserSection)
-                    self.tableView.reloadRows(at: [indexPath], with: .none)
-                }
+                let indexPath = IndexPath(row: row, section: kUserSection)
+                self.tableView.reloadRows(at: [indexPath], with: .none)
             })
-            retrieveImageOver = true
         } else {
             datas.append([
                 ItemData(
@@ -195,7 +194,7 @@ extension SideMenuViewController {
             return
         }
         if host != URL(string: ROOT_URL)!.host! {
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else if router.match(URL(string: url.path)!) == nil {
             dismiss(animated: true, completion: {
                 if let host = url.host, host != URL(string: ROOT_URL)!.host! {

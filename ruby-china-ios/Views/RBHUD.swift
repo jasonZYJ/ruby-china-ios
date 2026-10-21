@@ -12,7 +12,7 @@ private var hud: MBProgressHUD?
 
 class RBHUD {
     static func success(_ message: String?) {
-        guard let view = UIApplication.shared.keyWindow else {
+        guard let view = UIApplication.keyWindow else {
             return
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
@@ -24,7 +24,7 @@ class RBHUD {
     }
     
     static func error(_ message: String?) {
-        guard let view = UIApplication.shared.keyWindow else {
+        guard let view = UIApplication.keyWindow else {
             return
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
@@ -36,7 +36,7 @@ class RBHUD {
     }
     
     static func progress(_ message: String?) {
-        guard let view = UIApplication.shared.keyWindow else {
+        guard let view = UIApplication.keyWindow else {
             return
         }
         hud = MBProgressHUD.showAdded(to: view, animated: true)

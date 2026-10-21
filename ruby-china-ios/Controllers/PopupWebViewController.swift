@@ -10,9 +10,8 @@ import Foundation
 
 import UIKit
 import WebKit
-import Turbolinks
 
-protocol PopupWebViewControllerDelegate: class {
+protocol PopupWebViewControllerDelegate: AnyObject {
     func popupWebViewControllerDidFinished(_ controller: PopupWebViewController, toURL url: URL?)
 }
 
@@ -31,13 +30,6 @@ class PopupWebViewController: WebViewController {
     func doDidFinished(toURL: URL) {
         dismiss(animated: true, completion: nil)
         delegate?.popupWebViewControllerDidFinished(self, toURL: toURL)
-    }
-    
-    func session(_ session: Session, didProposeVisitToURL URL: Foundation.URL, withAction action: Action) {
-        if URL.path != self.currentPath {
-            doDidFinished(toURL: URL)
-            return
-        }
     }
 }
 

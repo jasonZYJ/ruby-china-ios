@@ -16,7 +16,7 @@ class RootViewController: UITabBarController {
     fileprivate var needDisplayNotifications = false
     
     fileprivate func setupSideMenu() {
-        SideMenuManager.default.menuLeftNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sideMenuController") as? UISideMenuNavigationController
+        SideMenuManager.default.menuLeftNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sideMenuController") as? SideMenuNavigationController
         SideMenuManager.default.menuFadeStatusBar = false
         SideMenuManager.default.menuPresentMode = .viewSlideOut
         SideMenuManager.default.menuAnimationBackgroundColor = UIColor.gray

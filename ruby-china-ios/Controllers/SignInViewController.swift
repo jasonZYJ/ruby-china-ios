@@ -1,8 +1,7 @@
 import UIKit
 import WebKit
-import YYKeyboardManager
 
-protocol SignInViewControllerDelegate: class {
+protocol SignInViewControllerDelegate: AnyObject {
     func signInViewControllerDidAuthenticate(_ sender: SignInViewController)
 }
 
@@ -34,12 +33,22 @@ class SignInViewController: UIViewController {
         setupViews()
         
         OAuth2.shared.delegate = self
-        
+
         textFieldDidChanged()
-        
-        YYKeyboardManager.default().add(self)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
-    
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        loginField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let text = loginField.text , text != "" {
@@ -48,13 +57,7 @@ class SignInViewController: UIViewController {
             loginField.becomeFirstResponder()
         }
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        loginField.resignFirstResponder()
-        passwordField.resignFirstResponder()
-    }
-    
+
 }
 
 // MARK: - Actions
@@ -149,12 +152,22 @@ extension SignInViewController {
     
 }
 
-extension SignInViewController: YYKeyboardObserver {
-    func keyboardChanged(with transition: YYKeyboardTransition) {
-        UIView.animate(withDuration: transition.animationDuration, delay: 0, options: transition.animationOption, animations: {
+extension SignInViewController {
+    /// 键盘变化时调整内容位置（替代 YYKeyboardManager）
+    @objc func keyboardWillChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+            return
+        }
+        let curve = (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? 0
+        let options = UIView.AnimationOptions(rawValue: curve << 16)
+
+        let toVisible = endFrame.minY < UIScreen.main.bounds.height
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
             var y: CGFloat = 0
-            if transition.toVisible.boolValue {
-                y = (self.view.frame.height - transition.toFrame.height) * 0.5
+            if toVisible {
+                y = (self.view.frame.height - endFrame.height) * 0.5
             } else {
                 y = self.view.frame.height * 0.5
             }

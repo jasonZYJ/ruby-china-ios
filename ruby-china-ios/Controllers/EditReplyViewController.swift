@@ -10,7 +10,7 @@ class EditReplyViewController: PopupWebViewController {
     }
     
     @objc func actionDone() {
-        visitableView.webView?.evaluateJavaScript("$('form[tb=\"edit-reply\"] .btn-primary').click()", completionHandler: nil)
+        webView?.evaluateJavaScript("$('form[tb=\"edit-reply\"] .btn-primary').click()", completionHandler: nil)
     }
 }
 

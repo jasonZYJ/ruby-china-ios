@@ -43,7 +43,7 @@ class SearchViewController: WebViewController {
     
     override func visitableDidRender() {
         super.visitableDidRender()
-        visitableView.webView?.isHidden = currentPath == searchPath
+        webView?.isHidden = currentPath == searchPath
     }
     
     override func viewWillAppear(_ animated: Bool) {

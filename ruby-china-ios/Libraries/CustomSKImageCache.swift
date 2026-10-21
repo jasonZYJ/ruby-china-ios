@@ -6,18 +6,21 @@
 //  Copyright © 2016年 ruby-china. All rights reserved.
 //
 
+import UIKit
 import SKPhotoBrowser
 import Kingfisher
 
 class CustomImageCache: SKImageCacheable {
     fileprivate let cache = KingfisherManager.shared.cache
-    
+
     func imageForKey(_ key: String) -> UIImage? {
-        switch cache.imageCachedType(forKey: key) {
-        case .disk: return cache.retrieveImageInDiskCache(forKey: key)
-        case .memory: return cache.retrieveImageInMemoryCache(forKey: key)
-        case .none: return nil
+        if let memoryImage = cache.retrieveImageInMemoryCache(forKey: key) {
+            return memoryImage
         }
+        guard let data = try? cache.diskStorage.value(forKey: key) else {
+            return nil
+        }
+        return UIImage(data: data)
     }
     
     func setImage(_ image: UIImage, forKey key: String) {

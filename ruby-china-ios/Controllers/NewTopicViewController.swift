@@ -9,6 +9,6 @@ class NewTopicViewController: PopupWebViewController {
     }
     
     @objc func actionDone() {
-        visitableView.webView?.evaluateJavaScript("$('form[tb=\"edit-topic\"]').submit()", completionHandler: nil)
+        webView?.evaluateJavaScript("$('form[tb=\"edit-topic\"]').submit()", completionHandler: nil)
     }
 }

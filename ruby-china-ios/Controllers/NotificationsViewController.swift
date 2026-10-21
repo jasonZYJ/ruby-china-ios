@@ -29,9 +29,9 @@ class NotificationsViewController: WebViewController {
     }
     
     @objc func cleanNotificationsAction() {
-        visitableView.webView?.evaluateJavaScript("$('#btn-remove-all').click();") { [weak self](obj, err) in
+        webView?.evaluateJavaScript("$('#btn-remove-all').click();") { [weak self](obj, err) in
             OAuth2.shared.refreshUnreadNotifications()
-            _ = self?.visitableView.webView?.reload()
+            _ = self?.webView?.reload()
         }
     }
     

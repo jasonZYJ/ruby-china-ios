@@ -1,6 +1,5 @@
 import UIKit
-import Turbolinks
-import Router
+import WebKit
 
 class WebViewController: VisitableViewController {
     var currentPath = "" {
@@ -78,11 +77,18 @@ class WebViewController: VisitableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let webView = WKWebView(frame: view.bounds, configuration: TurbolinksSessionLib.shared.webViewConfiguration)
+        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        webView.allowsBackForwardNavigationGestures = false
+        view.addSubview(webView)
+        self.webView = webView
+
         TurbolinksSessionLib.shared.visit(self)
-        
+
         _ = router.match(URL(string: currentPath)!)
         navigationItem.title = pageTitle
-        
+
         addObserver()
     }
     
@@ -108,7 +114,7 @@ extension WebViewController {
     
     func clearSession() {
         let js = "document.cookie = '_homeland_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';";
-        visitableView.webView?.evaluateJavaScript(js, completionHandler: nil)
+        webView?.evaluateJavaScript(js, completionHandler: nil)
     }
     
 }
@@ -130,7 +136,7 @@ extension WebViewController {
     }
     
     func shareAction() {
-        guard let webView = self.visitableView.webView,
+        guard let webView = self.webView,
             let title = webView.title,
             let url = webView.url,
             var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
