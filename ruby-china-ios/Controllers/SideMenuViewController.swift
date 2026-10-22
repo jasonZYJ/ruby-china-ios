@@ -53,6 +53,8 @@ class SideMenuViewController: UITableViewController {
         logoView = UIImageView(image: UIImage(named: "logo"))
         logoView.contentMode = .scaleAspectFit
         logoView.frame = CGRect(x: 110, y: 35, width: 100, height: 100)
+        // 弹性左右边距：header 宽度变化时 logo 自动保持水平居中，不依赖布局时序
+        logoView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         headerView.addSubview(logoView)
         tableView.tableHeaderView = headerView
     }
@@ -64,7 +66,7 @@ class SideMenuViewController: UITableViewController {
             return
         }
         headerView.frame = CGRect(x: 0, y: 0, width: width, height: 170)
-        logoView.center = CGPoint(x: width / 2, y: 85)
+        // logo 靠 autoresizing 弹性边距自动居中
         tableView.tableHeaderView = headerView
     }
     
