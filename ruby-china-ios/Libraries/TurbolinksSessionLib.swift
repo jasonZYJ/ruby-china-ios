@@ -12,6 +12,7 @@ import UIKit
 import WebKit
 import SafariServices
 import SKPhotoBrowser
+import MBProgressHUD
 
 /// 访问动作（保留原 Turbolinks 命名，减少调用方改动）
 enum Action {
@@ -55,6 +56,8 @@ class TurbolinksSessionLib: NSObject {
         currentVisitable = visitable
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        // 页面加载指示（点击后立即给出反馈，完成或失败时隐藏）
+        MBProgressHUD.showAdded(to: visitable.view, animated: true)
         webView.load(URLRequest(url: visitable.visitableURL))
     }
 
@@ -441,6 +444,7 @@ extension TurbolinksSessionLib: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         log.error(["webView didFail", error])
         if let webViewController = currentVisitable {
+            MBProgressHUD.hide(for: webViewController.view, animated: true)
             webViewController.presentError(.NetworkError)
         }
     }
@@ -448,11 +452,15 @@ extension TurbolinksSessionLib: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         log.error(["webView didFailProvisionalNavigation", error])
         if let webViewController = currentVisitable {
+            MBProgressHUD.hide(for: webViewController.view, animated: true)
             webViewController.presentError(.NetworkError)
         }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if let webViewController = currentVisitable {
+            MBProgressHUD.hide(for: webViewController.view, animated: true)
+        }
         currentVisitable?.visitableDidRender()
     }
 }

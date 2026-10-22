@@ -257,6 +257,8 @@ class OAuth2 {
         UserDefaults.standard.synchronize()
 
         NotificationCenter.default.post(name: NSNotification.Name.userSignout, object: nil)
+        // 同步通知侧栏菜单等界面刷新为未登录状态
+        NotificationCenter.default.post(name: NSNotification.Name.userChanged, object: nil)
     }
 
     fileprivate func formURLEncode(_ parameters: [String: AnyObject]) -> String {

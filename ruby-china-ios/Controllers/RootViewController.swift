@@ -16,10 +16,15 @@ class RootViewController: UITabBarController {
     fileprivate var needDisplayNotifications = false
     
     fileprivate func setupSideMenu() {
-        SideMenuManager.default.menuLeftNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sideMenuController") as? SideMenuNavigationController
-        SideMenuManager.default.menuFadeStatusBar = false
+        SideMenuManager.default.leftMenuNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sideMenuController") as? SideMenuNavigationController
         SideMenuManager.default.menuPresentMode = .viewSlideOut
         SideMenuManager.default.menuAnimationBackgroundColor = UIColor.gray
+        SideMenuManager.default.menuWidth = max(280, min(UIScreen.main.bounds.width * 0.8, 320))
+    }
+
+    fileprivate func setupSideMenuGesture() {
+        // SideMenu 6 需手动添加屏幕边缘手势打开菜单（原版 SideMenu 2 自动添加，内部已去重）
+        _ = SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: UIApplication.appNavigationController.view, forMenu: .left)
     }
     
     fileprivate func setupViewControllers() {
@@ -28,13 +33,9 @@ class RootViewController: UITabBarController {
     }
     
     @objc func displaySideMenu() {
-        let presentSideMenuController = {
-            if let sideMenuController = SideMenuManager.default.menuLeftNavigationController {
-                self.present(sideMenuController, animated: true, completion: nil)
-            }
+        if let sideMenuController = SideMenuManager.default.leftMenuNavigationController {
+            self.present(sideMenuController, animated: true, completion: nil)
         }
-        
-        presentSideMenuController()
     }
     
     override func viewDidLoad() {
@@ -55,7 +56,9 @@ class RootViewController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isDidAppear = true
-        
+
+        setupSideMenuGesture()
+
         if needDisplayNotifications {
             needDisplayNotifications = false
             displayNotifications()
