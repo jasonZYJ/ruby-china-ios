@@ -30,16 +30,28 @@ class SideMenuViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = "Ruby China"
-        
+
+        // 隐藏侧栏自带导航栏（原黑底区域），顶部改放 logo header
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        edgesForExtendedLayout = .all
+        view.backgroundColor = SIDEMENU_BG_COLOR
+
         NotificationCenter.default.addObserver(self, selector: #selector(refreshDatas), name: NSNotification.Name.userChanged, object: nil)
         refreshDatas()
-        
+
         tableView.backgroundColor = SIDEMENU_BG_COLOR
-        
+
         tableView.delegate = self
         tableView.dataSource = self
+
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 170))
+        headerView.backgroundColor = SIDEMENU_BG_COLOR
+        let logoView = UIImageView(image: UIImage(named: "logo"))
+        logoView.contentMode = .scaleAspectFit
+        logoView.frame = CGRect(x: 0, y: 35, width: 100, height: 100)
+        logoView.center.x = headerView.center.x
+        headerView.addSubview(logoView)
+        tableView.tableHeaderView = headerView
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
