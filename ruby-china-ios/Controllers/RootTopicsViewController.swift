@@ -10,11 +10,7 @@ import UIKit
 import AMScrollingNavbar
 
 class RootTopicsViewController: TopicsViewController {
-    
-    fileprivate lazy var hideWebViewController: WebViewController = {
-        let vc = WebViewController(path: "/topics")
-        return vc
-    }()
+
     fileprivate var disappearTime: Date?
     fileprivate var filterData = TopicsFilterViewController.NodeData.listType(.last_actived)
     fileprivate var listType = TopicsService.ListType.popular
@@ -77,14 +73,8 @@ class RootTopicsViewController: TopicsViewController {
             navigationItem.rightBarButtonItems = [notificationsItem, searchItem, filterItem]
         }
         
-        // Turbolinks.VisitableViewController 第一个实例显示很慢
-        // hideWebViewController 是为解决此问题而生
-        // 启动时实例化一个看不见的 Turbolinks.VisitableViewController 以便之后的 Turbolinks.VisitableViewController 显示快些
-        addChild(hideWebViewController)
-        view.addSubview(hideWebViewController.view)
-        // 用真实屏宽（viewDidLoad 时 view.bounds 还是 0，会导致预热页面显示在屏幕左上角）
-        hideWebViewController.view.frame = CGRect(x: -UIScreen.main.bounds.width, y: 0, width: 100, height: 100)
-        
+        // 旧版依赖"预热 WebView"解决首次 Turbolinks 页面加载慢；现 WKProcessPool 已全局共享，
+        // WebContent 进程复用，预热已无必要，且其 view 泄露到屏幕上会造成白色色块
         addObserver()
         
         resetTitle(filterData)
