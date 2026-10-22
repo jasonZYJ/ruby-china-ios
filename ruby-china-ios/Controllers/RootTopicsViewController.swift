@@ -34,7 +34,9 @@ class RootTopicsViewController: TopicsViewController {
         super.viewDidLoad()
         
         let notificationsButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
-        notificationsButton.setImage(UIImage(named: "notifications")?.imageWithColor(PRIMARY_COLOR), for: .normal)
+        // 原 icons8-alarm 图标自带两侧声波弧线，小尺寸下像多出来的圆形；改用系统标准纯铃铛
+        let notificationsIcon = UIImage(systemName: "bell") ?? UIImage(named: "notifications")
+        notificationsButton.setImage(notificationsIcon?.imageWithColor(PRIMARY_COLOR), for: .normal)
         notificationsButton.addTarget(self, action: #selector(notificationsAction), for: .touchUpInside)
         let notificationsView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
         notificationsView.addSubview(notificationsButton)
