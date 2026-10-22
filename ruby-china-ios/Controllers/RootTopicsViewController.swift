@@ -44,7 +44,6 @@ class RootTopicsViewController: TopicsViewController {
         let notificationsItem = UIBarButtonItem(customView: notificationsView)
         
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem.fixNavigationSpacer(),
             notificationsItem,
             UIBarButtonItem.narrowButtonItem(image: UIImage(named: "search"), target: self, action: #selector(searchAction)),
             UIBarButtonItem.narrowButtonItem(image: UIImage(named: "filter"), target: self, action: #selector(filterAction)),
