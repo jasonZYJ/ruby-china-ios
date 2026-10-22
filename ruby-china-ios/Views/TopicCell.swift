@@ -153,7 +153,7 @@ extension TopicCell {
         repliesCountLabel.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel)
             make.right.equalToSuperview().inset(kContentPadding)
-            make.width.equalTo(30)
+            make.width.equalTo(44)
         }
     }
     
@@ -161,24 +161,37 @@ extension TopicCell {
         let attributes = [NSAttributedString.Key.font : kTitleTextFont]
         let attributedString = NSMutableAttributedString(string: data.title, attributes: attributes)
 
-        func addIcon(systemName: String, color: UIColor) {
-            guard let image = UIImage(systemName: systemName)?.withTintColor(color, renderingMode: .alwaysOriginal) else {
+        func addIcon(systemName: String) {
+            // SF Symbol 转换有开销，静态缓存避免滚动时重复生成
+            guard let attachment = TopicCell.iconAttachments[systemName] else {
                 return
             }
-            let attachment = NSTextAttachment()
-            attachment.image = image
-            attachment.bounds = CGRect(x: 0, y: -2, width: kTitleTextSize * 0.9, height: kTitleTextSize * 0.9)
             attributedString.append(NSAttributedString(attachment: attachment))
         }
 
         if data.excellent {
-            addIcon(systemName: "seal.fill", color: kNodeColor)
+            addIcon(systemName: "seal.fill")
         }
         if data.closedAt != nil {
-            addIcon(systemName: "checkmark.circle.fill", color: kNodeColor)
+            addIcon(systemName: "checkmark.circle.fill")
         }
 
         return attributedString
     }
+
+    private static var iconAttachments: [String: NSTextAttachment] = {
+        var attachments = [String: NSTextAttachment]()
+        for systemName in ["seal.fill", "checkmark.circle.fill"] {
+            guard let image = UIImage(systemName: systemName)?
+                .withTintColor(kNodeColor, renderingMode: .alwaysOriginal) else {
+                continue
+            }
+            let attachment = NSTextAttachment()
+            attachment.image = image
+            attachment.bounds = CGRect(x: 0, y: -2, width: kTitleTextSize * 0.9, height: kTitleTextSize * 0.9)
+            attachments[systemName] = attachment
+        }
+        return attachments
+    }()
     
 }

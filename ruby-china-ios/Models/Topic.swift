@@ -39,8 +39,8 @@ struct Topic {
         id = json["id"].intValue
         user = User(json: json["user"])!
         title = json["title"].stringValue
-        createdAt = json["created_at"].stringValue.dateValueFromISO8601()! as Date
-        updatedAt = json["updated_at"].stringValue.dateValueFromISO8601()! as Date
+        createdAt = json["created_at"].stringValue.dateValueFromISO8601() ?? Date()
+        updatedAt = json["updated_at"].stringValue.dateValueFromISO8601() ?? Date()
         repliedAt = json["replied_at"].string?.dateValueFromISO8601() as Date?
         repliesCount = json["replies_count"].intValue
         lastReplyUserID = json["last_reply_user_id"].int

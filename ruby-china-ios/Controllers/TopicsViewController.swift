@@ -62,7 +62,7 @@ class TopicsViewController: UITableViewController {
             guard let `self` = self else {
                 return
             }
-            self.load(offset: self.topicList!.count, limit: self.defaultLimit)
+            self.load(offset: self.topicList?.count ?? 0, limit: self.defaultLimit)
         }
     }
 
@@ -74,12 +74,14 @@ class TopicsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kCellReuseIdentifier, for: indexPath) as! TopicCell
-        cell.data = topicList![(indexPath as NSIndexPath).row]
+        cell.data = topicList?[indexPath.row]
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let data = topicList![(indexPath as NSIndexPath).row]
+        guard let data = topicList?[indexPath.row] else {
+            return
+        }
         let vc = TopicDetailsViewController(topicID: data.id)
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -128,7 +130,7 @@ extension TopicsViewController {
                 if self.topicList == nil || offset == 0 {
                     self.topicList = topics
                 } else {
-                    self.topicList! += topics
+                    self.topicList = (self.topicList ?? []) + topics
                 }
                 self.tableView.reloadData()
             } else {
