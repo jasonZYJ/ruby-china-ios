@@ -44,13 +44,24 @@ class SideMenuViewController: UITableViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 170))
+        // table header 用约束锚定到 tableView 宽度，避免 present 前取到错误 bounds 导致 logo 偏出屏幕
+        let headerView = UIView()
+        headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.backgroundColor = SIDEMENU_BG_COLOR
         let logoView = UIImageView(image: UIImage(named: "logo"))
         logoView.contentMode = .scaleAspectFit
-        logoView.frame = CGRect(x: 0, y: 35, width: 100, height: 100)
-        logoView.center.x = headerView.center.x
+        logoView.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(logoView)
+        NSLayoutConstraint.activate([
+            logoView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            logoView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 35),
+            logoView.widthAnchor.constraint(equalToConstant: 100),
+            logoView.heightAnchor.constraint(equalToConstant: 100),
+            headerView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            headerView.widthAnchor.constraint(equalTo: tableView.widthAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 170),
+        ])
         tableView.tableHeaderView = headerView
     }
     
