@@ -297,6 +297,21 @@ class TurbolinksSessionLib: NSObject {
 
     // MARK: - helpers
 
+    /// path + query + fragment（等价原 Router 库的 requestURI），保留编码形态，
+    /// 确保路由与页面 URL 不丢 query / 锚点
+    fileprivate func requestURI(of url: URL) -> String {
+        var result = url.path
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            if let query = components.percentEncodedQuery {
+                result += "?" + query
+            }
+            if let fragment = components.percentEncodedFragment {
+                result += "#" + fragment
+            }
+        }
+        return result
+    }
+
     /// 主导航栈（App 根部 ThemeNavigationController）
     fileprivate var rootNavigationController: UINavigationController? {
         guard let rootViewController = UIApplication.keyWindow?.rootViewController else {
@@ -361,8 +376,11 @@ extension TurbolinksSessionLib: WKNavigationDelegate {
             return
         }
 
-        // 非主框架的加载（如 iframe 内嵌 Youtube 视频）直接放行
-        if navigationAction.targetFrame?.isMainFrame == false {
+        // 程序发起的加载（初始 visit、reload、JS location 跳转、iframe 内嵌等非用户点击）直接放行。
+        // turbolinks 接管的页面由 JS 适配器通过 visitProposed 消息驱动原生路由；
+        // 未接管页面的用户点击（linkActivated）走下方路由拦截。
+        // 注意：若不在此放行，初始 load 会被下方路由逻辑 cancel 并触发 reload，造成死循环白屏。
+        if navigationAction.navigationType == .other {
             decisionHandler(.allow)
             return
         }
@@ -386,13 +404,9 @@ extension TurbolinksSessionLib: WKNavigationDelegate {
         } else if let host = url.host, host != URL(string: ROOT_URL)!.host! {
             // 外部网站, open in SafariView
             safariOpen(url)
-        } else if var newURL = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-            newURL.scheme = nil
-            newURL.host = nil
-            newURL.port = nil
-            if let path = newURL.string {
-                action(.Advance, path: path)
-            }
+        } else {
+            // 内部链接 → 原生路由
+            action(.Advance, path: requestURI(of: url))
         }
 
         decisionHandler(.cancel)
@@ -513,7 +527,7 @@ extension TurbolinksSessionLib: WKScriptMessageHandler {
             return
         }
 
-        action(visitAction, path: url.path)
+        action(visitAction, path: requestURI(of: url))
     }
 
     /// 处理 turbolinks JS 报告的访问失败（等价于原 SessionDelegate didFailRequestForVisitable）
