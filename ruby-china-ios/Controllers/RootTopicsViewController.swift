@@ -79,10 +79,11 @@ class RootTopicsViewController: TopicsViewController {
         
         // Turbolinks.VisitableViewController 第一个实例显示很慢
         // hideWebViewController 是为解决此问题而生
-        // 启动应用时实例化一个看不见的 Turbolinks.VisitableViewController 以便之后的 Turbolinks.VisitableViewController 显示快些
+        // 启动时实例化一个看不见的 Turbolinks.VisitableViewController 以便之后的 Turbolinks.VisitableViewController 显示快些
         addChild(hideWebViewController)
         view.addSubview(hideWebViewController.view)
-        hideWebViewController.view.frame = CGRect(x: -view.bounds.width, y: 0, width: 100, height: 100)
+        // 用真实屏宽（viewDidLoad 时 view.bounds 还是 0，会导致预热页面显示在屏幕左上角）
+        hideWebViewController.view.frame = CGRect(x: -UIScreen.main.bounds.width, y: 0, width: 100, height: 100)
         
         addObserver()
         

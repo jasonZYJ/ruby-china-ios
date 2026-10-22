@@ -57,7 +57,8 @@ class TopicsViewController: UITableViewController {
         tableView.separatorColor = UIColor.separator
         tableView.tableFooterView = UIView()
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
-        tableView.estimatedRowHeight = 56
+        // 禁用行高估计（56 与实际 90+ 差距大，快速滑动时 contentOffset 跳变导致 cell 重叠/卡顿）
+        tableView.estimatedRowHeight = 0
         tableView.headerWithRefreshingBlock { [weak self] in
             guard let `self` = self else {
                 return
@@ -118,12 +119,20 @@ extension TopicsViewController {
     func load(offset: Int, limit: Int) {
         if isLoading { return }
         isLoading = true
-        
+        // 首次进入（无数据）时用居中的 HUD 转圈，替代 mj_header 顶部的加载圈
+        let initialLoading = offset == 0 && (topicList == nil || topicList!.isEmpty)
+        if initialLoading {
+            RBHUD.progress(nil)
+        }
+
         loadTopics(offset: offset, limit: limit) { [weak self] (response, result) in
             guard let `self` = self else {
                 return
             }
             self.isLoading = false
+            if initialLoading {
+                RBHUD.progressHidden()
+            }
             
             if let header = self.tableView.mj_header, header.isRefreshing {
                 header.endRefreshing()

@@ -81,6 +81,9 @@ class WebViewController: VisitableViewController {
         let webView = WKWebView(frame: view.bounds, configuration: TurbolinksSessionLib.shared.webViewConfiguration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.allowsBackForwardNavigationGestures = false
+        // 站点没有深色 CSS：强制网页按浅色渲染，避免 WebKit 暗化后在白底上画出浅色文字（不可读）。
+        // 原生外壳（导航栏/工具栏）不受影响，仍跟随系统深浅色。
+        webView.overrideUserInterfaceStyle = .light
         view.addSubview(webView)
         self.webView = webView
 
