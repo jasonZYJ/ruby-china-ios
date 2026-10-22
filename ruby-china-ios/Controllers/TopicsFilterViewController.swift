@@ -69,20 +69,23 @@ class TopicsFilterViewController: UIViewController {
         
         view.delegate = self
         view.dataSource = self
-        view.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        view.backgroundColor = dynamicColor(light: UIColor(white: 1, alpha: 0.9), dark: UIColor(white: 0, alpha: 0.7))
         view.register(TopicsFilterNodeCell.self, forCellWithReuseIdentifier: self.cellIdentifier)
         view.register(TopicsFilterNodeSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: self.headerIdentifier)
         return view
     }()
     
-    fileprivate lazy var cellSelectedImage: UIImage? = {
-        let cellSize = (self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
-        return UIImage.roundedCorner(imageSize: cellSize, radius: 5, backgroundColor: PRIMARY_COLOR, borderWidth: 0, borderColor: PRIMARY_COLOR)
-    }()
-    fileprivate lazy var cellNormalImage: UIImage? = {
-        let cellSize = (self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
-        return UIImage.roundedCorner(imageSize: cellSize, radius: 5, backgroundColor: UIColor.clear, borderWidth: 1, borderColor: PRIMARY_COLOR)
-    }()
+    // 选中/未选中底图含颜色，不能固化成单张位图——按当前深浅色即时生成
+    fileprivate func cellSelectedImage() -> UIImage? {
+        let cellSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
+        let color = PRIMARY_COLOR.resolvedColor(with: traitCollection)
+        return UIImage.roundedCorner(imageSize: cellSize, radius: 5, backgroundColor: color, borderWidth: 0, borderColor: color)
+    }
+    fileprivate func cellNormalImage() -> UIImage? {
+        let cellSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
+        let color = PRIMARY_COLOR.resolvedColor(with: traitCollection)
+        return UIImage.roundedCorner(imageSize: cellSize, radius: 5, backgroundColor: UIColor.clear, borderWidth: 1, borderColor: color)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,8 +150,8 @@ extension TopicsFilterViewController: UICollectionViewDelegate, UICollectionView
         let node = groupDatas[(indexPath as NSIndexPath).section].nodes[(indexPath as NSIndexPath).item]
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TopicsFilterNodeCell
-        cell.normalImage = cellNormalImage
-        cell.selectedImage = cellSelectedImage
+        cell.normalImage = cellNormalImage()
+        cell.selectedImage = cellSelectedImage()
         cell.name = node.getName()
         cell.isSelected = selectedData == nil ? false : node == selectedData!
         return cell

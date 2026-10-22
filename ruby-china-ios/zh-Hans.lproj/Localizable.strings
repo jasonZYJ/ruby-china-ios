@@ -59,3 +59,7 @@
 "type recent" = "最新发布";
 "type no reply" = "无人问津";
 "type excellent" = "优质帖子";
+"appearance mode" = "深浅色模式";
+"appearance system" = "跟随系统";
+"appearance light" = "浅色";
+"appearance dark" = "深色";

@@ -16,8 +16,10 @@ private let kTextSize: CGFloat = 14
 private let kTextFont = UIFont.systemFont(ofSize: kTextSize, weight: UIFont.Weight.regular)
 private let kTitleTextFont = UIFont.systemFont(ofSize: kTitleTextSize, weight: UIFont.Weight.medium)
 private let kAvatarSize = CGSize(width: 18, height: 18)
-private let kAvatarColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
-private let kNodeColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
+private let kAvatarColor = dynamicColor(light: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0),
+                                        dark: UIColor(white: 0.62, alpha: 1.0))
+private let kNodeColor = dynamicColor(light: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0),
+                                      dark: UIColor(white: 0.62, alpha: 1.0))
 
 class TopicCell: UITableViewCell {
     
@@ -79,13 +81,13 @@ class TopicCell: UITableViewCell {
     }()
     fileprivate lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor(white: 0.13, alpha: 1)
+        view.textColor = dynamicColor(light: UIColor(white: 0.13, alpha: 1), dark: UIColor(white: 0.95, alpha: 1))
         view.numberOfLines = 0
         return view
     }()
     fileprivate lazy var repliesCountLabel: UILabel = {
         let view = UILabel()
-        view.textColor = UIColor(white: 0.4, alpha: 1)
+        view.textColor = dynamicColor(light: UIColor(white: 0.4, alpha: 1), dark: UIColor(white: 0.65, alpha: 1))
         view.font = kTextFont
         view.textAlignment = .right
         return view
@@ -162,8 +164,8 @@ extension TopicCell {
         let attributedString = NSMutableAttributedString(string: data.title, attributes: attributes)
 
         func addIcon(systemName: String) {
-            // SF Symbol 转换有开销，静态缓存避免滚动时重复生成
-            guard let attachment = TopicCell.iconAttachments[systemName] else {
+            // SF Symbol 转换有开销，按深浅色各缓存一份避免滚动时重复生成
+            guard let attachment = TopicCell.iconAttachment(systemName, for: traitCollection.userInterfaceStyle) else {
                 return
             }
             attributedString.append(NSAttributedString(attachment: attachment))
@@ -179,19 +181,21 @@ extension TopicCell {
         return attributedString
     }
 
-    private static var iconAttachments: [String: NSTextAttachment] = {
-        var attachments = [String: NSTextAttachment]()
-        for systemName in ["seal.fill", "checkmark.circle.fill"] {
-            guard let image = UIImage(systemName: systemName)?
-                .withTintColor(kNodeColor, renderingMode: .alwaysOriginal) else {
-                continue
-            }
-            let attachment = NSTextAttachment()
-            attachment.image = image
-            attachment.bounds = CGRect(x: 0, y: -2, width: kTitleTextSize * 0.9, height: kTitleTextSize * 0.9)
-            attachments[systemName] = attachment
+    private static var iconAttachments: [UIUserInterfaceStyle: [String: NSTextAttachment]] = [:]
+    private static func iconAttachment(_ systemName: String, for style: UIUserInterfaceStyle) -> NSTextAttachment? {
+        if let cached = iconAttachments[style]?[systemName] {
+            return cached
         }
-        return attachments
-    }()
-    
+        let color = kNodeColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
+        guard let image = UIImage(systemName: systemName)?
+            .withTintColor(color, renderingMode: .alwaysOriginal) else {
+            return nil
+        }
+        let attachment = NSTextAttachment()
+        attachment.image = image
+        attachment.bounds = CGRect(x: 0, y: -2, width: kTitleTextSize * 0.9, height: kTitleTextSize * 0.9)
+        iconAttachments[style, default: [:]][systemName] = attachment
+        return attachment
+    }
+
 }

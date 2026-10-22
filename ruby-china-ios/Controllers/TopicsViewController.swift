@@ -24,10 +24,18 @@ class TopicsViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if let navigationController = navigationController as? ScrollingNavigationController {
             navigationController.followScrollView(tableView, delay: 50.0)
             navigationController.scrollingNavbarDelegate = self
+        }
+    }
+
+    // 深浅色切换后重新渲染 cell（标题 SF 图标按 trait 缓存，需重建）
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            tableView.reloadData()
         }
     }
     
@@ -46,8 +54,7 @@ class TopicsViewController: UITableViewController {
         clearsSelectionOnViewWillAppear = true
         
         tableView.register(TopicCell.self, forCellReuseIdentifier: kCellReuseIdentifier)
-        // color: #F0F0F0
-        tableView.separatorColor = UIColor.init(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        tableView.separatorColor = UIColor.separator
         tableView.tableFooterView = UIView()
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
         tableView.estimatedRowHeight = 56

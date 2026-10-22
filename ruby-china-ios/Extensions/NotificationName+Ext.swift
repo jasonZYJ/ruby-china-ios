@@ -20,4 +20,6 @@ extension Notification.Name {
     static let userFavoriteChanged = Notification.Name("userFavoriteChanged")
     /// 未读消息数发生了变化
     static let userUnreadNotificationChanged = Notification.Name("userUnreadNotificationChanged")
+    /// 深浅色模式偏好发生了变化
+    static let appearanceChanged = Notification.Name("appearanceChanged")
 }

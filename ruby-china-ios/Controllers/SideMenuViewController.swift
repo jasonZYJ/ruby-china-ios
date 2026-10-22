@@ -185,6 +185,12 @@ extension SideMenuViewController {
         
         datas.append([
             ItemData(
+                name: "appearance mode".localized,
+                image: UIImage(systemName: "circle.lefthalf.fill")?.withRenderingMode(.alwaysTemplate) ?? UIImage(),
+                imageColor: PRIMARY_COLOR,
+                actionURL: URL(string: "app://appearance")!
+            ),
+            ItemData(
                 name: "wiki".localized,
                 image: UIImage(named: "wiki")!.withRenderingMode(.alwaysTemplate),
                 imageColor: PRIMARY_COLOR,
@@ -218,6 +224,13 @@ extension SideMenuViewController {
 extension SideMenuViewController {
     
     fileprivate func action(forURL url: URL) {
+        // App 内部动作（深浅色模式等）
+        if url.scheme == "app" {
+            if url.host == "appearance" {
+                presentAppearancePicker()
+            }
+            return
+        }
         guard let host = url.host else {
             return
         }
@@ -233,5 +246,25 @@ extension SideMenuViewController {
             })
         }
     }
-    
+
+    /// 深浅色模式三选一（跟随系统/浅色/深色），立即生效
+    fileprivate func presentAppearancePicker() {
+        let alert = UIAlertController(title: "appearance mode".localized, message: nil, preferredStyle: .actionSheet)
+        let modes: [AppearanceMode] = [.system, .light, .dark]
+        let current = AppearanceMode.current
+        for mode in modes {
+            let title = mode == current ? "✓ " + mode.localizedTitle : mode.localizedTitle
+            alert.addAction(UIAlertAction(title: title, style: .default) { _ in
+                AppearanceMode.set(mode)
+            })
+        }
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil))
+        // iPad 上 actionSheet 必须有 sourceView
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.maxY - 40, width: 1, height: 1)
+        }
+        present(alert, animated: true, completion: nil)
+    }
+
 }

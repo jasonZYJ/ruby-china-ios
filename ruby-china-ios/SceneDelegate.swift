@@ -15,10 +15,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let rootViewController = RootViewController()
         let navigationController = ThemeNavigationController(rootViewController: rootViewController)
-        navigationController.view.backgroundColor = UIColor.white
+        navigationController.view.backgroundColor = UIColor.systemBackground
 
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = navigationController
+        // 应用用户偏好的深浅色模式（跟随系统/浅色/深色）
+        if let style = AppearanceMode.current.userInterfaceStyle {
+            window?.overrideUserInterfaceStyle = style
+        }
         window?.makeKeyAndVisible()
 
         // 冷启动时点击推送消息

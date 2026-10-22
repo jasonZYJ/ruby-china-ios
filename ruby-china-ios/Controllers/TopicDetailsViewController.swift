@@ -43,7 +43,7 @@ class TopicDetailsViewController: WebViewController {
     
     func setToolbars() {
         let statusBarView = UIView(frame: view.window?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
-        let statusBarColor = UIColor.white
+        let statusBarColor = UIColor.systemBackground
         statusBarView.backgroundColor = statusBarColor
         statusBarView.autoresizingMask = .flexibleWidth
         view.addSubview(statusBarView)
@@ -233,7 +233,10 @@ extension TopicDetailsViewController {
         
         button.tag = checked ? checkedTag : uncheckedTag
         let image = UIImage(named: checked ? checkedImageNamed : uncheckedImageNamed)
-        button.setImage(image?.imageWithColor(PRIMARY_COLOR), for: .normal)
+        // template + 动态 tintColor，深浅色切换自动变色
+        button.setImage(image?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = PRIMARY_COLOR
+        button.setTitleColor(PRIMARY_COLOR, for: .normal)
         button.setTitle(title, for: .normal)
         // 选中动画
         if let imageView = button.imageView , checked {

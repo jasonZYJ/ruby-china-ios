@@ -28,7 +28,7 @@ class SignInViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(actionClose))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "sign up".localized, style: .plain, target: self, action: #selector(actionSignup))
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.systemBackground
         
         setupViews()
         
@@ -127,9 +127,9 @@ extension SignInViewController {
         
         loginButton = UIButton(frame: CGRect(x: margin, y: passwordField.frame.maxY + margin, width: view.frame.width - margin * 2, height: 44))
         loginButton.setTitle("sign in".localized, for: .normal)
-        loginButton.setBackgroundImage(UIImage.fromColor(NAVBAR_BG_COLOR), for: .normal)
-        loginButton.setBackgroundImage(UIImage.fromColor(NAVBAR_BORDER_COLOR), for: .highlighted)
-        loginButton.setTitleColor(UIColor.white, for: .normal)
+        // 动态背景色，深浅色切换自动解析（位图背景不会跟随）
+        loginButton.backgroundColor = NAVBAR_BG_COLOR
+        loginButton.setTitleColor(ON_PRIMARY_COLOR, for: .normal)
         loginButton.addTarget(self, action: #selector(actionLogin), for: .touchDown)
         
         contentView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: loginButton.frame.maxY))

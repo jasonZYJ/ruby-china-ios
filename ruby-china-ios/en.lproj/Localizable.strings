@@ -59,3 +59,7 @@
 "type recent" = "Recent";
 "type no reply" = "No reply";
 "type excellent" = "Excellent";
+"appearance mode" = "Appearance";
+"appearance system" = "Match System";
+"appearance light" = "Light";
+"appearance dark" = "Dark";
