@@ -5,11 +5,8 @@ import AMScrollingNavbar
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-
-    fileprivate lazy var rootViewController: RootViewController = {
-        return RootViewController()
-    }()
+    /// 冷启动时是否由推送消息触发（在 SceneDelegate 连接后处理）
+    static var launchedFromRemoteNotification = false
 
     fileprivate func initAppearance() {
         UINavigationBar.appearance().theme = true
@@ -22,9 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         initAppearance()
-        let navigationController = ThemeNavigationController(rootViewController: rootViewController)
-        navigationController.view.backgroundColor = UIColor.white
-        window?.rootViewController = navigationController
 
         // 请求推送权限并注册远程推送（替代已废弃的 UIUserNotificationSettings）
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { (_, _) in
@@ -32,9 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
 
-        if let launchOptions = launchOptions, let _ = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] {
+        if let launchOptions = launchOptions, launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] != nil {
             // 点击推送消息启动的应用
-            rootViewController.displayNotifications()
+            AppDelegate.launchedFromRemoteNotification = true
         }
 
         return true
@@ -74,7 +68,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
     /// 点击推送消息
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        rootViewController.displayNotifications()
+        if let rootViewController = UIApplication.appNavigationController.viewControllers.first as? RootViewController {
+            rootViewController.displayNotifications()
+        }
         completionHandler()
     }
 }

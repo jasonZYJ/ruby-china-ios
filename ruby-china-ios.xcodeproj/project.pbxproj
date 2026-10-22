@@ -54,6 +54,7 @@
 		24FDFBBC1DBBAE06004BB9A6 /* UIBarButtonItem+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FDFBBB1DBBAE06004BB9A6 /* UIBarButtonItem+Ext.swift */; };
 		961580A71D477A7600B32BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 961580A61D477A7600B32BDA /* Assets.xcassets */; };
 		961F70FA1D6AB0440079212C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 961F70FC1D6AB0440079212C /* Localizable.strings */; };
+		F1EE00000000000000000003 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000003 /* SceneDelegate.swift */; };
 		9670F1901D4235D200128F8A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9670F18F1D4235D200128F8A /* AppDelegate.swift */; };
 		9670F1951D4235D200128F8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9670F1931D4235D200128F8A /* Main.storyboard */; };
 		967684771D45D88300EC9BD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967684761D45D88300EC9BD9 /* Constants.swift */; };
@@ -123,6 +124,7 @@
 		F1DD00000000000000000002 /* MiniRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniRouter.swift; sourceTree = "<group>"; };
 		961580A61D477A7600B32BDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9670F18C1D4235D200128F8A /* Ruby China.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ruby China.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1DD00000000000000000003 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		9670F18F1D4235D200128F8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9670F1941D4235D200128F8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9670F19B1D4235D200128F8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				24FDFBBD1DBBB53D004BB9A6 /* Ruby China.entitlements */,
 				967684761D45D88300EC9BD9 /* Constants.swift */,
 				9670F18F1D4235D200128F8A /* AppDelegate.swift */,
+				F1DD00000000000000000003 /* SceneDelegate.swift */,
 				24742CE91D50FE2E00D16CA9 /* Models */,
 				24742CEB1D50FE2E00D16CA9 /* Views */,
 				24742CD81D50FE2E00D16CA9 /* Controllers */,
@@ -401,6 +404,7 @@
 				96F9FD6B1D59A168004FD824 /* PopupWebViewController.swift in Sources */,
 				24742D011D50FE2E00D16CA9 /* RBTextField.swift in Sources */,
 				9670F1901D4235D200128F8A /* AppDelegate.swift in Sources */,
+				F1EE00000000000000000003 /* SceneDelegate.swift in Sources */,
 				24742CFA1D50FE2E00D16CA9 /* APIRequest.swift in Sources */,
 				24742CF31D50FE2E00D16CA9 /* NotificationsViewController.swift in Sources */,
 				24A6A3EC1DB796D400EC89DB /* UIScrollView+MJRefreshDefault.swift in Sources */,
