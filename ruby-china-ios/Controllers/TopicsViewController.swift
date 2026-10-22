@@ -57,8 +57,10 @@ class TopicsViewController: UITableViewController {
         tableView.separatorColor = UIColor.separator
         tableView.tableFooterView = UIView()
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
-        // 禁用行高估计（56 与实际 90+ 差距大，快速滑动时 contentOffset 跳变导致 cell 重叠/卡顿）
-        tableView.estimatedRowHeight = 0
+        tableView.rowHeight = UITableView.automaticDimension
+        // 预估高度需接近真实值（88~110）：原 56 偏小太多，快速滑动时 contentOffset 跳变导致 cell 重叠；
+        // 注意不能设 0，否则 self-sizing 被关闭、行高回落 44pt 默认值，标题会被裁掉
+        tableView.estimatedRowHeight = 96
         tableView.headerWithRefreshingBlock { [weak self] in
             guard let `self` = self else {
                 return
