@@ -68,7 +68,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
     /// 点击推送消息
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        if let rootViewController = UIApplication.appNavigationController.viewControllers.first as? RootViewController {
+        if let rootViewController = UIApplication.appNavigationController?.viewControllers.first as? RootViewController {
             rootViewController.displayNotifications()
         }
         completionHandler()
@@ -125,7 +125,8 @@ extension UITabBar {
 
 extension UIApplication {
     /// 获取应用主UINavigationController
-    static var appNavigationController: ScrollingNavigationController {
-        return keyWindow!.rootViewController as! ScrollingNavigationController
+    /// 主导航控制器（Scene 生命周期的启动阶段 keyWindow 可能尚未就绪，返回 Optional）
+    static var appNavigationController: ScrollingNavigationController? {
+        return keyWindow?.rootViewController as? ScrollingNavigationController
     }
 }

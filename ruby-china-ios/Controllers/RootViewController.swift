@@ -24,7 +24,11 @@ class RootViewController: UITabBarController {
 
     fileprivate func setupSideMenuGesture() {
         // SideMenu 6 需手动添加屏幕边缘手势打开菜单（原版 SideMenu 2 自动添加，内部已去重）
-        _ = SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: UIApplication.appNavigationController.view, forMenu: .left)
+        // 注意：首次 viewWillAppear 时 SceneDelegate 尚未调用 makeKeyAndVisible，keyWindow 为空
+        guard let navigationController = UIApplication.appNavigationController else {
+            return
+        }
+        _ = SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: navigationController.view, forMenu: .left)
     }
     
     fileprivate func setupViewControllers() {
@@ -63,6 +67,12 @@ class RootViewController: UITabBarController {
             needDisplayNotifications = false
             displayNotifications()
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // 此窗口阶段 SceneDelegate 已 makeKeyAndVisible，补挂边缘手势
+        setupSideMenuGesture()
     }
     
     fileprivate func resetNavigationItem(_ viewController: UIViewController) {
