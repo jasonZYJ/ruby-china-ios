@@ -29,44 +29,53 @@ class RootTopicsViewController: TopicsViewController {
         view.isHidden = true
         return view
     }()
+    /// iOS 26+ 使用系统原生 UIBarButtonItem.badge（customView 上的 UILabel 背景会被
+    /// Liquid Glass 合成白化，红底角标显示为白圈）；旧系统走 customView + badgeLabel
+    fileprivate var nativeNotificationsItem: UIBarButtonItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let notificationsButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
-        // 系统标准纯铃铛；template + 动态 tintColor，深浅色切换自动变色
+        // 系统标准纯铃铛图标
         let notificationsIcon = UIImage(systemName: "bell") ?? UIImage(named: "notifications")
-        notificationsButton.setImage(notificationsIcon?.withRenderingMode(.alwaysTemplate), for: .normal)
-        notificationsButton.tintColor = PRIMARY_COLOR
-        notificationsButton.addTarget(self, action: #selector(notificationsAction), for: .touchUpInside)
-        let notificationsView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
-        notificationsView.addSubview(notificationsButton)
-        notificationsView.addSubview(badgeLabel)
-        // 固定 customView 尺寸，避免导航栏 autolayout 把按钮收缩到图标宽度（与其他按钮不对齐）
-        notificationsView.translatesAutoresizingMaskIntoConstraints = false
-        notificationsView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        notificationsView.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        notificationsButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            notificationsButton.topAnchor.constraint(equalTo: notificationsView.topAnchor),
-            notificationsButton.bottomAnchor.constraint(equalTo: notificationsView.bottomAnchor),
-            notificationsButton.leadingAnchor.constraint(equalTo: notificationsView.leadingAnchor),
-            notificationsButton.trailingAnchor.constraint(equalTo: notificationsView.trailingAnchor),
-        ])
-        badgeLabel.translatesAutoresizingMaskIntoConstraints = false
-        badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        NSLayoutConstraint.activate([
-            badgeLabel.centerXAnchor.constraint(equalTo: notificationsView.trailingAnchor, constant: -4),
-            badgeLabel.topAnchor.constraint(equalTo: notificationsView.topAnchor, constant: 2),
-        ])
-        let notificationsItem = UIBarButtonItem(customView: notificationsView)
-        
-        navigationItem.rightBarButtonItems = [
-            notificationsItem,
-            UIBarButtonItem.narrowButtonItem(image: UIImage(named: "search"), target: self, action: #selector(searchAction)),
-            UIBarButtonItem.narrowButtonItem(image: UIImage(named: "filter"), target: self, action: #selector(filterAction)),
-        ]
+        let searchItem = UIBarButtonItem.narrowButtonItem(image: UIImage(named: "search"), target: self, action: #selector(searchAction))
+        let filterItem = UIBarButtonItem.narrowButtonItem(image: UIImage(named: "filter"), target: self, action: #selector(filterAction))
+
+        if #available(iOS 26.0, *) {
+            // Liquid Glass 下系统原生 badge 才能正确渲染（红底白字、深浅自适应）
+            let item = UIBarButtonItem(image: notificationsIcon, style: .plain, target: self, action: #selector(notificationsAction))
+            item.tintColor = PRIMARY_COLOR
+            nativeNotificationsItem = item
+            navigationItem.rightBarButtonItems = [item, searchItem, filterItem]
+        } else {
+            let notificationsButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
+            notificationsButton.setImage(notificationsIcon?.withRenderingMode(.alwaysTemplate), for: .normal)
+            notificationsButton.tintColor = PRIMARY_COLOR
+            notificationsButton.addTarget(self, action: #selector(notificationsAction), for: .touchUpInside)
+            let notificationsView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
+            notificationsView.addSubview(notificationsButton)
+            notificationsView.addSubview(badgeLabel)
+            // 固定 customView 尺寸，避免导航栏 autolayout 把按钮收缩到图标宽度（与其他按钮不对齐）
+            notificationsView.translatesAutoresizingMaskIntoConstraints = false
+            notificationsView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            notificationsView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            notificationsButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                notificationsButton.topAnchor.constraint(equalTo: notificationsView.topAnchor),
+                notificationsButton.bottomAnchor.constraint(equalTo: notificationsView.bottomAnchor),
+                notificationsButton.leadingAnchor.constraint(equalTo: notificationsView.leadingAnchor),
+                notificationsButton.trailingAnchor.constraint(equalTo: notificationsView.trailingAnchor),
+            ])
+            badgeLabel.translatesAutoresizingMaskIntoConstraints = false
+            badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
+            badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            NSLayoutConstraint.activate([
+                badgeLabel.centerXAnchor.constraint(equalTo: notificationsView.trailingAnchor, constant: -4),
+                badgeLabel.topAnchor.constraint(equalTo: notificationsView.topAnchor, constant: 2),
+            ])
+            let notificationsItem = UIBarButtonItem(customView: notificationsView)
+            navigationItem.rightBarButtonItems = [notificationsItem, searchItem, filterItem]
+        }
         
         // Turbolinks.VisitableViewController 第一个实例显示很慢
         // hideWebViewController 是为解决此问题而生
@@ -154,8 +163,12 @@ extension RootTopicsViewController {
     
     fileprivate func refreshBadgeLabel() {
         let count = OAuth2.shared.unreadNotificationCount
-        badgeLabel.isHidden = count <= 0
-        badgeLabel.text = "\(min(99, count))"
+        if #available(iOS 26.0, *) {
+            nativeNotificationsItem?.badge = count > 0 ? UIBarButtonItem.Badge.count(min(99, count)) : nil
+        } else {
+            badgeLabel.isHidden = count <= 0
+            badgeLabel.text = "\(min(99, count))"
+        }
     }
     
     fileprivate func resetTitle(_ filterData: TopicsFilterViewController.NodeData) {
