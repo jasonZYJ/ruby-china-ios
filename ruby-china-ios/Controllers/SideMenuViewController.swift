@@ -27,7 +27,9 @@ class SideMenuViewController: UITableViewController {
     }()
     
     private lazy var datas = [[ItemData]]()
-    
+    private var headerView: UIView!
+    private var logoView: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,24 +46,25 @@ class SideMenuViewController: UITableViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
-        // table header 用约束锚定到 tableView 宽度，避免 present 前取到错误 bounds 导致 logo 偏出屏幕
-        let headerView = UIView()
-        headerView.translatesAutoresizingMaskIntoConstraints = false
+        // header 用 frame 布局；宽度在 viewDidLayoutSubviews 里按菜单实际宽度修正
+        // （不能用约束把 tableHeaderView 锚定到 tableView 自身，会形成布局环导致崩溃）
+        headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 170))
         headerView.backgroundColor = SIDEMENU_BG_COLOR
-        let logoView = UIImageView(image: UIImage(named: "logo"))
+        logoView = UIImageView(image: UIImage(named: "logo"))
         logoView.contentMode = .scaleAspectFit
-        logoView.translatesAutoresizingMaskIntoConstraints = false
+        logoView.frame = CGRect(x: 110, y: 35, width: 100, height: 100)
         headerView.addSubview(logoView)
-        NSLayoutConstraint.activate([
-            logoView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
-            logoView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 35),
-            logoView.widthAnchor.constraint(equalToConstant: 100),
-            logoView.heightAnchor.constraint(equalToConstant: 100),
-            headerView.topAnchor.constraint(equalTo: tableView.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
-            headerView.widthAnchor.constraint(equalTo: tableView.widthAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 170),
-        ])
+        tableView.tableHeaderView = headerView
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let width = tableView.bounds.width
+        guard width > 0, headerView.bounds.width != width else {
+            return
+        }
+        headerView.frame = CGRect(x: 0, y: 0, width: width, height: 170)
+        logoView.center = CGPoint(x: width / 2, y: 85)
         tableView.tableHeaderView = headerView
     }
     
