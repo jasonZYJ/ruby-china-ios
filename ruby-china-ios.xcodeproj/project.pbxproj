@@ -62,6 +62,8 @@
 		96F9FD6B1D59A168004FD824 /* PopupWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F9FD6A1D59A168004FD824 /* PopupWebViewController.swift */; };
 		F1EE00000000000000000001 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000001 /* Log.swift */; };
 		F1EE00000000000000000002 /* MiniRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000002 /* MiniRouter.swift */; };
+		F1EE00000000000000000004 /* FontScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000004 /* FontScale.swift */; };
+		F1EE00000000000000000005 /* QuickActionsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000005 /* QuickActionsPanel.swift */; };
 		F1AA00000000000000000001 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000001 /* SnapKit */; };
 		F1AA00000000000000000002 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000002 /* SwiftyJSON */; };
 		F1AA00000000000000000003 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000003 /* Kingfisher */; };
@@ -122,6 +124,8 @@
 		24FDFBBD1DBBB53D004BB9A6 /* Ruby China.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ruby China.entitlements"; sourceTree = "<group>"; };
 		F1DD00000000000000000001 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		F1DD00000000000000000002 /* MiniRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniRouter.swift; sourceTree = "<group>"; };
+		F1DD00000000000000000004 /* FontScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontScale.swift; sourceTree = "<group>"; };
+		F1DD00000000000000000005 /* QuickActionsPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickActionsPanel.swift; sourceTree = "<group>"; };
 		961580A61D477A7600B32BDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9670F18C1D4235D200128F8A /* Ruby China.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ruby China.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DD00000000000000000003 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -191,6 +195,8 @@
 				24DE002A1DC1CA2C004AA741 /* CustomSKImageCache.swift */,
 				F1DD00000000000000000001 /* Log.swift */,
 				F1DD00000000000000000002 /* MiniRouter.swift */,
+				F1DD00000000000000000004 /* FontScale.swift */,
+				F1DD00000000000000000005 /* QuickActionsPanel.swift */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -433,6 +439,8 @@
 				24DE002B1DC1CA2C004AA741 /* CustomSKImageCache.swift in Sources */,
 				F1EE00000000000000000001 /* Log.swift in Sources */,
 				F1EE00000000000000000002 /* MiniRouter.swift in Sources */,
+				F1EE00000000000000000004 /* FontScale.swift in Sources */,
+				F1EE00000000000000000005 /* QuickActionsPanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

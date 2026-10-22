@@ -36,6 +36,8 @@ class SearchViewController: WebViewController {
     override func viewDidLoad() {
         currentPath = searchPath
         super.viewDidLoad()
+        // WebView 未加载前默认白底，深色模式下转场白闪
+        view.backgroundColor = UIColor.systemBackground
         navigationItem.titleView = searchBar
         let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonAction))
         navigationItem.rightBarButtonItem = cancelItem

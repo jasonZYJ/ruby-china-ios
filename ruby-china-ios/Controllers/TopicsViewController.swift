@@ -25,10 +25,8 @@ class TopicsViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let navigationController = navigationController as? ScrollingNavigationController {
-            navigationController.followScrollView(tableView, delay: 50.0)
-            navigationController.scrollingNavbarDelegate = self
-        }
+        // 不再启用导航栏跟随滚动收缩：收缩/展开与 self-sizing 行高修正叠加，
+        // 滚回顶部时 contentOffset 漂移会让导航栏盖住第一行（保留导航栏常驻更稳）
     }
 
     // 深浅色切换后重新渲染 cell（标题 SF 图标按 trait 缓存，需重建）
@@ -41,11 +39,6 @@ class TopicsViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        if let navigationController = navigationController as? ScrollingNavigationController {
-            navigationController.stopFollowingScrollView()
-            scrollingNavigationController(navigationController, didChangeState: .expanded)
-        }
     }
     
     override func viewDidLoad() {
@@ -84,6 +77,7 @@ class TopicsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kCellReuseIdentifier, for: indexPath) as! TopicCell
+        cell.fontScale = FontScale.current(FontScale.keys.list)
         cell.data = topicList?[indexPath.row]
         return cell
     }

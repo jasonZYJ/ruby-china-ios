@@ -81,9 +81,11 @@ class WebViewController: VisitableViewController {
         let webView = WKWebView(frame: view.bounds, configuration: TurbolinksSessionLib.shared.webViewConfiguration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.allowsBackForwardNavigationGestures = false
-        // 站点没有深色 CSS：强制网页按浅色渲染，避免 WebKit 暗化后在白底上画出浅色文字（不可读）。
-        // 原生外壳（导航栏/工具栏）不受影响，仍跟随系统深浅色。
+        // 站点没有深色 CSS：引擎保持 light 渲染（避免 WebKit 自动暗化产生白底浅字），
+        // 深色模式下再注入覆盖样式，让网页视觉上跟随深色模式
         webView.overrideUserInterfaceStyle = .light
+        // 页面背景必须不透明：否则下层视图（如列表页浮动快捷组）会透出来
+        view.backgroundColor = UIColor.systemBackground
         view.addSubview(webView)
         self.webView = webView
 
@@ -100,6 +102,63 @@ class WebViewController: VisitableViewController {
     override func visitableDidRender() {
         // 覆盖 visitableDidRender，避免设置 title
         navigationItem.title = pageTitle
+        // 页面渲染完成后按当前模式套用网页主题（每次 turbolinks 换页都需重新注入）
+        applyWebPageTheme()
+    }
+
+    // 深浅色切换时网页跟随
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            applyWebPageTheme()
+        }
+    }
+
+    /// 站点没有深色 CSS：深色模式注入覆盖样式；字号缩放注入正文规则（浅色/默认字号时仅移除）
+    func applyWebPageTheme() {
+        guard let webView = webView else {
+            return
+        }
+        let dark = traitCollection.userInterfaceStyle == .dark
+        let js = WebViewController.themeJS(dark: dark, fontScale: FontScale.current(FontScale.keys.detail))
+        webView.evaluateJavaScript(js, completionHandler: nil)
+    }
+
+    private static func themeJS(dark: Bool, fontScale: CGFloat) -> String {
+        var css = ""
+        if dark {
+            css += """
+            html,body{background:#161618!important;color:#E6E6E9!important}
+            div,section,article,aside,header,footer,nav,ul,ol,li,dl,dd,dt,form,fieldset,blockquote,figure,table,tr,td,th,span,p{background-color:transparent!important}
+            .panel,.panel-default,.panel-body,.panel-heading,.panel-footer,.list-group-item,
+            .card,.topic-detail,.markdown-body,.reply,.media,.navbar,.dropdown-menu,
+            .form-control,.btn-default,.breadcrumb,.pagination>li>a,.table{background-color:#1E1E21!important;border-color:#2E2E33!important}
+            .markdown-body,.markdown-body p,.markdown-body li,.markdown-body span,.markdown-body div,
+            .markdown-body td,.markdown-body blockquote,.reply,.reply p,.reply span,.reply div,.media-body{color:#DEDEE2!important}
+            .markdown-body a,.reply a{color:#6EA8FE!important}
+            .markdown-body strong,.markdown-body h1,.markdown-body h2,.markdown-body h3,
+            .markdown-body h4,.markdown-body h5,.markdown-body h6,.media-heading{color:#F0F0F2!important}
+            pre,code{background:#26262A!important;color:#DCDCE0!important}
+            img{opacity:.92}
+            """
+        }
+        if abs(fontScale - 1.0) > 0.01 {
+            // 站点 CSS 对正文字号有高优先级定义，font-size 覆盖不可靠；
+            // 改用 body zoom（等价浏览器缩放，文字/图片整体缩放且必然生效）
+            css += "body{zoom:\(String(format: "%.2f", fontScale))!important}"
+        }
+        guard !css.isEmpty else {
+            return "(function(){ document.getElementById('rc-native-theme')?.remove(); })();"
+        }
+        return """
+        (function(){
+          document.getElementById('rc-native-theme')?.remove();
+          var s = document.createElement('style');
+          s.id = 'rc-native-theme';
+          s.textContent = `\(css)`;
+          document.head.appendChild(s);
+        })();
+        """
     }
     
 }

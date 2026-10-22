@@ -37,28 +37,50 @@ class TopicCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var fontScale: CGFloat = 1 {
+        didSet {
+            guard fontScale != oldValue else {
+                return
+            }
+            applyFonts()
+            refreshContent()
+        }
+    }
+
     var data: Topic? {
         didSet {
-            if let data = data {
-                let avatarSize = CGSize(width: kAvatarSize.width * 2, height: kAvatarSize.height * 2)
-                let imageProcessor = RoundCornerImageProcessor(cornerRadius: avatarSize.width / 2.0, targetSize: avatarSize)
-                avatarImageView.kf.setImage(with: data.user.avatarUrl, options: [
-                    .processor(imageProcessor),
-                    .transition(ImageTransition.fade(0.5))
-                ])
-                
-                titleLabel.attributedText = titleAttributedText(data)
-                repliesCountLabel.text = data.repliesCount > 0 ? "\(data.repliesCount)" : nil
-                nodeButton.setTitle(data.nodeName, for: .normal)
-                userNameButton.setTitle(data.user.login, for: .normal)
-            } else {
-                avatarImageView.kf.setImage(with: nil as URL?)
-                titleLabel.attributedText = nil
-                repliesCountLabel.text = nil
-                nodeButton.setTitle(nil, for: .normal)
-                userNameButton.setTitle(nil, for: .normal)
-            }
+            refreshContent()
         }
+    }
+
+    fileprivate func refreshContent() {
+        if let data = data {
+            let avatarSize = CGSize(width: kAvatarSize.width * 2, height: kAvatarSize.height * 2)
+            let imageProcessor = RoundCornerImageProcessor(cornerRadius: avatarSize.width / 2.0, targetSize: avatarSize)
+            avatarImageView.kf.setImage(with: data.user.avatarUrl, options: [
+                .processor(imageProcessor),
+                .transition(ImageTransition.fade(0.5))
+            ])
+
+            titleLabel.attributedText = titleAttributedText(data)
+            repliesCountLabel.text = data.repliesCount > 0 ? "\(data.repliesCount)" : nil
+            nodeButton.setTitle(data.nodeName, for: .normal)
+            userNameButton.setTitle(data.user.login, for: .normal)
+        } else {
+            avatarImageView.kf.setImage(with: nil as URL?)
+            titleLabel.attributedText = nil
+            repliesCountLabel.text = nil
+            nodeButton.setTitle(nil, for: .normal)
+            userNameButton.setTitle(nil, for: .normal)
+        }
+    }
+
+    fileprivate func applyFonts() {
+        titleLabel.font = UIFont.systemFont(ofSize: kTitleTextSize * fontScale, weight: UIFont.Weight.medium)
+        let textFont = UIFont.systemFont(ofSize: kTextSize * fontScale, weight: UIFont.Weight.regular)
+        userNameButton.titleLabel?.font = textFont
+        nodeButton.titleLabel?.font = textFont
+        repliesCountLabel.font = textFont
     }
     
     var onUserClick: ((_ data: Topic?) -> ())? {
@@ -160,12 +182,13 @@ extension TopicCell {
     }
     
     fileprivate func titleAttributedText(_ data: Topic) -> NSAttributedString {
-        let attributes = [NSAttributedString.Key.font : kTitleTextFont]
+        let titleFont = UIFont.systemFont(ofSize: kTitleTextSize * fontScale, weight: UIFont.Weight.medium)
+        let attributes = [NSAttributedString.Key.font : titleFont]
         let attributedString = NSMutableAttributedString(string: data.title, attributes: attributes)
 
         func addIcon(systemName: String) {
-            // SF Symbol 转换有开销，按深浅色各缓存一份避免滚动时重复生成
-            guard let attachment = TopicCell.iconAttachment(systemName, for: traitCollection.userInterfaceStyle) else {
+            // SF Symbol 转换有开销，按深浅色+字号各缓存一份避免滚动时重复生成
+            guard let attachment = TopicCell.iconAttachment(systemName, for: traitCollection.userInterfaceStyle, size: kTitleTextSize * fontScale) else {
                 return
             }
             attributedString.append(NSAttributedString(attachment: attachment))
@@ -182,8 +205,9 @@ extension TopicCell {
     }
 
     private static var iconAttachments: [UIUserInterfaceStyle: [String: NSTextAttachment]] = [:]
-    private static func iconAttachment(_ systemName: String, for style: UIUserInterfaceStyle) -> NSTextAttachment? {
-        if let cached = iconAttachments[style]?[systemName] {
+    private static func iconAttachment(_ systemName: String, for style: UIUserInterfaceStyle, size: CGFloat) -> NSTextAttachment? {
+        let cacheKey = "\(systemName)-\(Int(size * 10))"
+        if let cached = iconAttachments[style]?[cacheKey] {
             return cached
         }
         let color = kNodeColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
@@ -193,8 +217,8 @@ extension TopicCell {
         }
         let attachment = NSTextAttachment()
         attachment.image = image
-        attachment.bounds = CGRect(x: 0, y: -2, width: kTitleTextSize * 0.9, height: kTitleTextSize * 0.9)
-        iconAttachments[style, default: [:]][systemName] = attachment
+        attachment.bounds = CGRect(x: 0, y: -2, width: size * 0.9, height: size * 0.9)
+        iconAttachments[style, default: [:]][cacheKey] = attachment
         return attachment
     }
 

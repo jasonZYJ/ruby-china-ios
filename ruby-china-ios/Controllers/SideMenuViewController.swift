@@ -48,14 +48,24 @@ class SideMenuViewController: UITableViewController {
 
         // header 用 frame 布局；宽度在 viewDidLayoutSubviews 里按菜单实际宽度修正
         // （不能用约束把 tableHeaderView 锚定到 tableView 自身，会形成布局环导致崩溃）
-        headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 170))
+        headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         headerView.backgroundColor = SIDEMENU_BG_COLOR
         logoView = UIImageView(image: UIImage(named: "logo"))
         logoView.contentMode = .scaleAspectFit
-        logoView.frame = CGRect(x: 110, y: 35, width: 100, height: 100)
+        logoView.frame = CGRect(x: 110, y: 20, width: 100, height: 100)
         // 弹性左右边距：header 宽度变化时 logo 自动保持水平居中，不依赖布局时序
         logoView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         headerView.addSubview(logoView)
+
+        let titleView = UILabel()
+        titleView.text = "Ruby China"
+        titleView.font = UIFont.systemFont(ofSize: 22, weight: .semibold)
+        titleView.textColor = BLACK_COLOR
+        titleView.textAlignment = .center
+        titleView.frame = CGRect(x: 0, y: 128, width: 320, height: 30)
+        // 与 logo 同步保持水平居中
+        titleView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleWidth]
+        headerView.addSubview(titleView)
         tableView.tableHeaderView = headerView
     }
 
@@ -65,8 +75,8 @@ class SideMenuViewController: UITableViewController {
         guard width > 0, headerView.bounds.width != width else {
             return
         }
-        headerView.frame = CGRect(x: 0, y: 0, width: width, height: 170)
-        // logo 靠 autoresizing 弹性边距自动居中
+        headerView.frame = CGRect(x: 0, y: 0, width: width, height: 200)
+        // logo 与标题靠 autoresizing 弹性边距自动居中
         tableView.tableHeaderView = headerView
     }
     

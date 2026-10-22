@@ -32,8 +32,9 @@ class RootTopicsViewController: TopicsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 系统标准纯铃铛图标
-        let notificationsIcon = UIImage(systemName: "bell") ?? UIImage(named: "notifications")
+        // 系统标准纯铃铛（light 细线，与旁边搜索/过滤的细线图标一致）
+        let symbolConfig = UIImage.SymbolConfiguration(weight: .light)
+        let notificationsIcon = (UIImage(systemName: "bell")?.applyingSymbolConfiguration(symbolConfig)) ?? UIImage(named: "notifications")
         let searchItem = UIBarButtonItem.narrowButtonItem(image: UIImage(named: "search"), target: self, action: #selector(searchAction))
         let filterItem = UIBarButtonItem.narrowButtonItem(image: UIImage(named: "filter"), target: self, action: #selector(filterAction))
 
@@ -81,13 +82,64 @@ class RootTopicsViewController: TopicsViewController {
         reloadTopics(filterData)
         refreshBadgeLabel()
     }
+
+    /// 列表页右下角毛玻璃浮动快捷组：字体放大/缩小 + 滚动到顶/到底
+    /// 挂在列表页所在容器（view.superview）上：固定不随滚动；push 到详情页时随整个容器一起被盖住，天然隐藏
+    fileprivate var quickActionsPanel: QuickActionsPanel?
+
+    fileprivate func setupQuickActions() {
+        // viewDidLoad 时还没进视图层级，等 viewDidAppear（superview 就绪）后调用
+        guard quickActionsPanel == nil, let containerView = view.superview else {
+            return
+        }
+        let panel = QuickActionsPanel(items: [
+            QuickActionsPanel.Item(title: "A\u{207A}", action: { [weak self] in self?.fontIncreaseAction() }),
+            QuickActionsPanel.Item(title: "A\u{207B}", action: { [weak self] in self?.fontDecreaseAction() }),
+            QuickActionsPanel.Item(systemIcon: "chevron.up", action: { [weak self] in self?.scrollToTopAction() }),
+        ])
+        panel.pinToBottomRight(of: containerView)
+        quickActionsPanel = panel
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupQuickActions()
+    }
+
+    /// 列表页字号放大/缩小：独立按钮、持久化
+    @objc fileprivate func fontIncreaseAction() {
+        adjustListFont { FontScale.zoomIn($0) }
+    }
+
+    @objc fileprivate func fontDecreaseAction() {
+        adjustListFont { FontScale.zoomOut($0) }
+    }
+
+    fileprivate func adjustListFont(_ transform: (CGFloat) -> CGFloat) {
+        let current = FontScale.current(FontScale.keys.list)
+        let next = transform(current)
+        guard next != current else {
+            return
+        }
+        FontScale.save(next, key: FontScale.keys.list)
+        tableView.reloadData()
+        RBHUD.success(FontScale.percentText(next))
+    }
+
+    /// 快捷滚动到顶部
+    @objc fileprivate func scrollToTopAction() {
+        guard let count = topicList?.count, count > 0 else {
+            return
+        }
+        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         checkRefreshContent()
         OAuth2.shared.refreshUnreadNotifications()
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         resetDisappearTime()
@@ -124,6 +176,8 @@ extension RootTopicsViewController {
         
         let nc = ScrollingNavigationController(rootViewController: vc)
         nc.modalPresentationStyle = .fullScreen
+        // 深色模式下避免转场白闪
+        nc.view.backgroundColor = UIColor.systemBackground
         self.present(nc, animated: true, completion: nil)
     }
     

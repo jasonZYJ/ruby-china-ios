@@ -68,6 +68,47 @@ class TopicDetailsViewController: WebViewController {
 
         toolbarItems = [backItem, flexibleBar, likeItem, favoriteItem, shareItem, followItem]
     }
+
+    /// 详情页右下角毛玻璃浮动快捷组：只放字体放大/缩小（滚动交给网页自身导航）
+    fileprivate var quickActionsPanel: QuickActionsPanel?
+
+    fileprivate func setupQuickActions() {
+        guard quickActionsPanel == nil else {
+            return
+        }
+        let panel = QuickActionsPanel(items: [
+            QuickActionsPanel.Item(title: "A\u{207A}", action: { [weak self] in self?.fontIncreaseAction() }),
+            QuickActionsPanel.Item(title: "A\u{207B}", action: { [weak self] in self?.fontDecreaseAction() }),
+        ])
+        panel.pinToBottomRight(of: view)
+        quickActionsPanel = panel
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupQuickActions()
+    }
+
+    /// 详情页字号放大：点击循环切换并持久化，立即应用到网页
+    @objc fileprivate func fontIncreaseAction() {
+        adjustDetailFont { FontScale.zoomIn($0) }
+    }
+
+    /// 详情页字号缩小
+    @objc fileprivate func fontDecreaseAction() {
+        adjustDetailFont { FontScale.zoomOut($0) }
+    }
+
+    fileprivate func adjustDetailFont(_ transform: (CGFloat) -> CGFloat) {
+        let current = FontScale.current(FontScale.keys.detail)
+        let next = transform(current)
+        guard next != current else {
+            return
+        }
+        FontScale.save(next, key: FontScale.keys.detail)
+        applyWebPageTheme()
+        RBHUD.success(FontScale.percentText(next))
+    }
     
     override func reloadByLoginStatusChanged() {
         super.reloadByLoginStatusChanged()

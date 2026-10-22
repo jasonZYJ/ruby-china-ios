@@ -172,6 +172,8 @@ extension TopicsFilterViewController {
     static func show() -> TopicsFilterViewController {
         let vc = TopicsFilterViewController()
         let window = UIWindow(frame: UIScreen.main.bounds)
+        // 场景时代窗口必须关联网格 Scene 才会显示，否则 makeKeyAndVisible 无效（过滤面板打不开）
+        window.windowScene = UIApplication.keyWindow?.windowScene
         window.rootViewController = vc
         window.windowLevel = UIWindow.Level.alert
         window.makeKeyAndVisible()
