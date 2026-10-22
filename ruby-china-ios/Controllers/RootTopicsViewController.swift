@@ -36,11 +36,27 @@ class RootTopicsViewController: TopicsViewController {
         let notificationsButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
         notificationsButton.setImage(UIImage(named: "notifications")?.imageWithColor(PRIMARY_COLOR), for: .normal)
         notificationsButton.addTarget(self, action: #selector(notificationsAction), for: .touchUpInside)
-        let notificationsView = UIView(frame: notificationsButton.frame)
+        let notificationsView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
         notificationsView.addSubview(notificationsButton)
         notificationsView.addSubview(badgeLabel)
-        badgeLabel.center.x = notificationsButton.frame.maxX - 3
-        badgeLabel.frame.origin.y = notificationsButton.center.y - badgeLabel.frame.height
+        // 固定 customView 尺寸，避免导航栏 autolayout 把按钮收缩到图标宽度（与其他按钮不对齐）
+        notificationsView.translatesAutoresizingMaskIntoConstraints = false
+        notificationsView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        notificationsView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        notificationsButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            notificationsButton.topAnchor.constraint(equalTo: notificationsView.topAnchor),
+            notificationsButton.bottomAnchor.constraint(equalTo: notificationsView.bottomAnchor),
+            notificationsButton.leadingAnchor.constraint(equalTo: notificationsView.leadingAnchor),
+            notificationsButton.trailingAnchor.constraint(equalTo: notificationsView.trailingAnchor),
+        ])
+        badgeLabel.translatesAutoresizingMaskIntoConstraints = false
+        badgeLabel.widthAnchor.constraint(equalToConstant: 18).isActive = true
+        badgeLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        NSLayoutConstraint.activate([
+            badgeLabel.centerXAnchor.constraint(equalTo: notificationsView.trailingAnchor, constant: -6),
+            badgeLabel.topAnchor.constraint(equalTo: notificationsView.topAnchor, constant: 3),
+        ])
         let notificationsItem = UIBarButtonItem(customView: notificationsView)
         
         navigationItem.rightBarButtonItems = [

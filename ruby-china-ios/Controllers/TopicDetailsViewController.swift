@@ -13,6 +13,7 @@ class TopicDetailsViewController: WebViewController {
     private(set) var topicID: Int!
     fileprivate var followButton: UIButton!
     fileprivate var likeButton: UIButton!
+    fileprivate var favoriteButton: UIButton!
     fileprivate var favorited: Bool = false
     
     convenience init(topicID: Int, topicPath: String? = nil) {
@@ -48,20 +49,24 @@ class TopicDetailsViewController: WebViewController {
         view.addSubview(statusBarView)
 
         let (backItem, _) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "back"), target: self, action: #selector(backAction))
-        let (moreItem, _) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "dropdown"), target: self, action: #selector(moreAction))
-        
+
         let (followItem, followBtn) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "subscription"), target: self, action: #selector(followAction(_:)))
         followButton = followBtn
-        
-        let (likeItem, likeBtn) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "like"), target: self, action: #selector(likeAction(_:)))
-        likeBtn.frame.size.width = 50
+
+        let (likeItem, likeBtn) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "like"), target: self, action: #selector(likeAction(_:)), width: 50)
         likeBtn.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         likeBtn.setTitleColor(PRIMARY_COLOR, for: .normal)
         likeButton = likeBtn
-        
-        let fixedBar = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
-        toolbarItems = [backItem, fixedBar, likeItem, fixedBar, followItem, moreItem]
+
+        // 收藏、分享从原来的 dropdown 折叠菜单平铺到工具栏，与点赞并列
+        let (favoriteItem, favoriteBtn) = UIBarButtonItem.narrowButtonItem2(image: UIImage(named: "bookmark"), target: self, action: #selector(favoriteAction(_:)))
+        favoriteButton = favoriteBtn
+        let shareImage = UIImage(systemName: "square.and.arrow.up")
+        let (shareItem, _) = UIBarButtonItem.narrowButtonItem2(image: shareImage, target: self, action: #selector(shareAction))
+
+        let flexibleBar = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+        toolbarItems = [backItem, flexibleBar, likeItem, favoriteItem, shareItem, followItem]
     }
     
     override func reloadByLoginStatusChanged() {
@@ -75,24 +80,36 @@ class TopicDetailsViewController: WebViewController {
 // MARK: - action
 @objc
 extension TopicDetailsViewController {
-    
-    override func moreAction() {
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let favoriteTitle = (favorited ? "cancel favorites" : "favorites").localized
-        let favoriteAction = UIAlertAction(title: favoriteTitle, style: .default) { [weak self] action in
-            self?.favoriteAction()
+
+    func favoriteAction(_ button: UIButton) {
+        if !OAuth2.shared.isLogined {
+            SignInViewController.show()
+            return
         }
-        sheet.addAction(favoriteAction)
-        
-        let shareAction = UIAlertAction(title: "share".localized, style: .default) { [weak self] action in
-            self?.shareAction()
+
+        if favorited {
+            TopicsService.unfavorite(topicID) { [weak self] (response) in
+                if let code = response.response?.statusCode , code == 200 {
+                    self?.favorited = false
+                    RBHUD.success("cancel favorites success".localized)
+                    if let favoriteButton = self?.favoriteButton {
+                        self?.setButton(favoriteButton, checked: false)
+                    }
+                    NotificationCenter.default.post(name: NSNotification.Name.userFavoriteChanged, object: nil)
+                }
+            }
+        } else {
+            TopicsService.favorite(topicID) { [weak self] (response) in
+                if let code = response.response?.statusCode , code == 200 {
+                    self?.favorited = true
+                    RBHUD.success("favorites success".localized)
+                    if let favoriteButton = self?.favoriteButton {
+                        self?.setButton(favoriteButton, checked: true)
+                    }
+                    NotificationCenter.default.post(name: NSNotification.Name.userFavoriteChanged, object: nil)
+                }
+            }
         }
-        sheet.addAction(shareAction)
-        
-        let cancelAction = UIAlertAction(title: "cancel".localized, style: .cancel, handler: nil)
-        sheet.addAction(cancelAction)
-        self.present(sheet, animated: true, completion: nil)
     }
     
     func likeAction(_ button: UIButton) {
@@ -179,6 +196,7 @@ extension TopicDetailsViewController {
         guard let id = topicID , OAuth2.shared.isLogined else {
             self.setButton(followButton, checked: false)
             self.setButton(likeButton, checked: false)
+            self.setButton(favoriteButton, checked: false)
             return
         }
         TopicsService.detail(id) { [weak self] (response, topic, topicMeta) in
@@ -192,6 +210,7 @@ extension TopicDetailsViewController {
             self.favorited = meta.favorited
             self.setButton(self.followButton, checked: meta.followed)
             self.setButton(self.likeButton, checked: meta.liked, likesCount: topic.likesCount)
+            self.setButton(self.favoriteButton, checked: meta.favorited)
         }
     }
     
@@ -205,6 +224,9 @@ extension TopicDetailsViewController {
             checkedImageNamed = "like-filled"
             uncheckedImageNamed = "like"
             title = " \(likesCount ?? 0)"
+        } else if button == favoriteButton {
+            checkedImageNamed = "bookmark-filled"
+            uncheckedImageNamed = "bookmark"
         } else {
             return
         }
