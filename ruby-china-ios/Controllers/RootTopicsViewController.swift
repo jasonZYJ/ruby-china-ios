@@ -19,13 +19,13 @@ class RootTopicsViewController: TopicsViewController {
     fileprivate var filterData = TopicsFilterViewController.NodeData.listType(.last_actived)
     fileprivate var listType = TopicsService.ListType.popular
     fileprivate lazy var badgeLabel: UILabel = {
-        let view = UILabel(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
+        let view = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         view.clipsToBounds = true
-        view.layer.cornerRadius = view.bounds.height / 2.0
+        view.layer.cornerRadius = 10
         view.backgroundColor = UIColor.red
         view.textColor = UIColor.white
         view.textAlignment = .center
-        view.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        view.font = UIFont.systemFont(ofSize: 11, weight: .semibold)
         view.isHidden = true
         return view
     }()
@@ -53,11 +53,11 @@ class RootTopicsViewController: TopicsViewController {
             notificationsButton.trailingAnchor.constraint(equalTo: notificationsView.trailingAnchor),
         ])
         badgeLabel.translatesAutoresizingMaskIntoConstraints = false
-        badgeLabel.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        badgeLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        badgeLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         NSLayoutConstraint.activate([
-            badgeLabel.centerXAnchor.constraint(equalTo: notificationsView.trailingAnchor, constant: -6),
-            badgeLabel.topAnchor.constraint(equalTo: notificationsView.topAnchor, constant: 3),
+            badgeLabel.centerXAnchor.constraint(equalTo: notificationsView.trailingAnchor, constant: -4),
+            badgeLabel.topAnchor.constraint(equalTo: notificationsView.topAnchor, constant: 2),
         ])
         let notificationsItem = UIBarButtonItem(customView: notificationsView)
         
