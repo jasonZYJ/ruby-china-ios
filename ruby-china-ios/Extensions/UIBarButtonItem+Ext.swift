@@ -42,7 +42,7 @@ extension UIBarButtonItem {
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
         return (UIBarButtonItem(customView: button), button)
     }
-    
+
     /// 返回一个负宽度的 FixedSpace，使得 leftBarButtonItem 和 rightBarButtonItem 距离屏幕边框不那么远。
     ///
     /// - returns: 负宽度的 FixedSpace

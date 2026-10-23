@@ -64,6 +64,7 @@
 		F1EE00000000000000000002 /* MiniRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000002 /* MiniRouter.swift */; };
 		F1EE00000000000000000004 /* FontScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000004 /* FontScale.swift */; };
 		F1EE00000000000000000005 /* QuickActionsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000005 /* QuickActionsPanel.swift */; };
+		F1EE00000000000000000006 /* TopicExcerptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DD00000000000000000006 /* TopicExcerptService.swift */; };
 		F1AA00000000000000000001 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000001 /* SnapKit */; };
 		F1AA00000000000000000002 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000002 /* SwiftyJSON */; };
 		F1AA00000000000000000003 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F1BB00000000000000000003 /* Kingfisher */; };
@@ -126,6 +127,7 @@
 		F1DD00000000000000000002 /* MiniRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniRouter.swift; sourceTree = "<group>"; };
 		F1DD00000000000000000004 /* FontScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontScale.swift; sourceTree = "<group>"; };
 		F1DD00000000000000000005 /* QuickActionsPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickActionsPanel.swift; sourceTree = "<group>"; };
+		F1DD00000000000000000006 /* TopicExcerptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicExcerptService.swift; sourceTree = "<group>"; };
 		961580A61D477A7600B32BDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9670F18C1D4235D200128F8A /* Ruby China.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ruby China.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DD00000000000000000003 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				F1DD00000000000000000002 /* MiniRouter.swift */,
 				F1DD00000000000000000004 /* FontScale.swift */,
 				F1DD00000000000000000005 /* QuickActionsPanel.swift */,
+				F1DD00000000000000000006 /* TopicExcerptService.swift */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				F1EE00000000000000000002 /* MiniRouter.swift in Sources */,
 				F1EE00000000000000000004 /* FontScale.swift in Sources */,
 				F1EE00000000000000000005 /* QuickActionsPanel.swift in Sources */,
+				F1EE00000000000000000006 /* TopicExcerptService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

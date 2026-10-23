@@ -42,6 +42,10 @@ class SideMenuViewController: UITableViewController {
         refreshDatas()
 
         tableView.backgroundColor = SIDEMENU_BG_COLOR
+        if #available(iOS 26.0, *) {
+            // 玻璃卡片行自带边界，隐藏系统分隔线
+            tableView.separatorStyle = .none
+        }
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -95,7 +99,43 @@ class SideMenuViewController: UITableViewController {
         cell.imageView?.image = itemData.image
         cell.imageView?.tintColor = itemData.imageColor
         cell.selectionStyle = itemData.actionURL == nil ? .none : .blue
+        attachGlassBackground(to: cell)
         return cell
+    }
+
+    /// iOS 26+：菜单项包 Liquid Glass 圆角卡片底（每行独立玻璃条，行间露出侧栏背景）
+    fileprivate func attachGlassBackground(to cell: UITableViewCell) {
+        guard #available(iOS 26.0, *) else {
+            return
+        }
+        let glassTag = 1001
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
+        if let glass = cell.contentView.viewWithTag(glassTag) {
+            // 复用时确保玻璃在最底层（文字图标在其上）
+            cell.contentView.sendSubviewToBack(glass)
+            return
+        }
+        let glass = UIVisualEffectView(effect: UIGlassEffect())
+        glass.tag = glassTag
+        glass.isUserInteractionEnabled = false
+        glass.layer.cornerRadius = 12
+        glass.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(glass)
+        cell.contentView.sendSubviewToBack(glass)
+        NSLayoutConstraint.activate([
+            glass.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 3),
+            glass.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -3),
+            glass.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 10),
+            glass.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
+        ])
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if #available(iOS 26.0, *) {
+            return 50
+        }
+        return super.tableView(tableView, heightForRowAt: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

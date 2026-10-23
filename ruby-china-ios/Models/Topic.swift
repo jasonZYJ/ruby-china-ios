@@ -13,6 +13,8 @@ struct Topic {
     let id: Int
     let user: User
     let title: String
+    /// 正文 Markdown 原文（列表接口不返回该字段，详情接口返回）
+    let body: String?
     let createdAt: Date
     let updatedAt: Date
     let repliedAt: Date?
@@ -39,6 +41,7 @@ struct Topic {
         id = json["id"].intValue
         user = User(json: json["user"])!
         title = json["title"].stringValue
+        body = json["body"].string
         createdAt = json["created_at"].stringValue.dateValueFromISO8601() ?? Date()
         updatedAt = json["updated_at"].stringValue.dateValueFromISO8601() ?? Date()
         repliedAt = json["replied_at"].string?.dateValueFromISO8601() as Date?

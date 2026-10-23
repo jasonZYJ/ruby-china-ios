@@ -54,6 +54,11 @@ class TopicsViewController: UITableViewController {
         // 预估高度需接近真实值（88~110）：原 56 偏小太多，快速滑动时 contentOffset 跳变导致 cell 重叠；
         // 注意不能设 0，否则 self-sizing 被关闭、行高回落 44pt 默认值，标题会被裁掉
         tableView.estimatedRowHeight = 96
+        if #available(iOS 26.0, *) {
+            // 文章玻璃卡片（TopicCell 内置）：隐藏系统分隔线、分组灰底衬托卡片
+            tableView.separatorStyle = .none
+            tableView.backgroundColor = .systemGroupedBackground
+        }
         tableView.headerWithRefreshingBlock { [weak self] in
             guard let `self` = self else {
                 return
@@ -78,8 +83,30 @@ class TopicsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kCellReuseIdentifier, for: indexPath) as! TopicCell
         cell.fontScale = FontScale.current(FontScale.keys.list)
-        cell.data = topicList?[indexPath.row]
+        let topic = topicList?[indexPath.row]
+        cell.data = topic
+        // 摘要：先取缓存；无缓存则按需预取（回调在主线程），完成后仅重载该行
+        if let topic = topic {
+            cell.summary = TopicExcerptService.shared.cachedExcerpt(topicID: topic.id)
+            TopicExcerptService.shared.ensureExcerpt(topicID: topic.id) { [weak self] in
+                self?.reloadRowIfVisible(topicID: topic.id)
+            }
+        }
         return cell
+    }
+
+    /// 摘要加载完成后重载对应行（仅当该行仍可见且数据未变化时）
+    func reloadRowIfVisible(topicID: Int) {
+        guard let list = topicList, let index = list.firstIndex(where: { $0.id == topicID }) else {
+            return
+        }
+        let indexPath = IndexPath(row: index, section: 0)
+        guard tableView.indexPathsForVisibleRows?.contains(indexPath) == true else {
+            return
+        }
+        UIView.performWithoutAnimation {
+            tableView.reloadRows(at: [indexPath], with: .none)
+        }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

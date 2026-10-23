@@ -13,6 +13,7 @@ import Kingfisher
 private let kContentPadding = UIEdgeInsets(top: 15, left: 25, bottom: 15, right: 25)
 private let kTitleTextSize: CGFloat = 16
 private let kTextSize: CGFloat = 14
+private let kSummaryTextSize: CGFloat = 13
 private let kTextFont = UIFont.systemFont(ofSize: kTextSize, weight: UIFont.Weight.regular)
 private let kTitleTextFont = UIFont.systemFont(ofSize: kTitleTextSize, weight: UIFont.Weight.medium)
 private let kAvatarSize = CGSize(width: 18, height: 18)
@@ -20,13 +21,19 @@ private let kAvatarColor = dynamicColor(light: UIColor(red: 0.5, green: 0.5, blu
                                         dark: UIColor(white: 0.62, alpha: 1.0))
 private let kNodeColor = dynamicColor(light: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0),
                                       dark: UIColor(white: 0.62, alpha: 1.0))
+private let kSummaryColor = dynamicColor(light: UIColor(white: 0.45, alpha: 1.0),
+                                         dark: UIColor(white: 0.62, alpha: 1.0))
+/// 精华帖奖章图标颜色（橙红）
+private let kExcellentColor = UIColor(red: 0.91, green: 0.33, blue: 0.22, alpha: 1.0)
 
 class TopicCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        attachGlassBackground()
         contentView.addSubview(avatarImageView)
         contentView.addSubview(titleLabel)
+        contentView.addSubview(summaryLabel)
         contentView.addSubview(repliesCountLabel)
         contentView.addSubview(nodeButton)
         contentView.addSubview(userNameButton)
@@ -53,6 +60,13 @@ class TopicCell: UITableViewCell {
         }
     }
 
+    /// 正文摘要（标题下方两行）；为 nil 时隐藏该行
+    var summary: String? {
+        didSet {
+            refreshContent()
+        }
+    }
+
     fileprivate func refreshContent() {
         if let data = data {
             let avatarSize = CGSize(width: kAvatarSize.width * 2, height: kAvatarSize.height * 2)
@@ -63,12 +77,14 @@ class TopicCell: UITableViewCell {
             ])
 
             titleLabel.attributedText = titleAttributedText(data)
+            summaryLabel.text = summary
             repliesCountLabel.text = data.repliesCount > 0 ? "\(data.repliesCount)" : nil
             nodeButton.setTitle(data.nodeName, for: .normal)
             userNameButton.setTitle(data.user.login, for: .normal)
         } else {
             avatarImageView.kf.setImage(with: nil as URL?)
             titleLabel.attributedText = nil
+            summaryLabel.text = nil
             repliesCountLabel.text = nil
             nodeButton.setTitle(nil, for: .normal)
             userNameButton.setTitle(nil, for: .normal)
@@ -78,6 +94,7 @@ class TopicCell: UITableViewCell {
     fileprivate func applyFonts() {
         titleLabel.font = UIFont.systemFont(ofSize: kTitleTextSize * fontScale, weight: UIFont.Weight.medium)
         let textFont = UIFont.systemFont(ofSize: kTextSize * fontScale, weight: UIFont.Weight.regular)
+        summaryLabel.font = UIFont.systemFont(ofSize: kSummaryTextSize * fontScale, weight: UIFont.Weight.regular)
         userNameButton.titleLabel?.font = textFont
         nodeButton.titleLabel?.font = textFont
         repliesCountLabel.font = textFont
@@ -105,6 +122,13 @@ class TopicCell: UITableViewCell {
         let view = UILabel()
         view.textColor = dynamicColor(light: UIColor(white: 0.13, alpha: 1), dark: UIColor(white: 0.95, alpha: 1))
         view.numberOfLines = 0
+        return view
+    }()
+    fileprivate lazy var summaryLabel: UILabel = {
+        let view = UILabel()
+        view.textColor = kSummaryColor
+        view.font = UIFont.systemFont(ofSize: kSummaryTextSize, weight: UIFont.Weight.regular)
+        view.numberOfLines = 2
         return view
     }()
     fileprivate lazy var repliesCountLabel: UILabel = {
@@ -154,6 +178,27 @@ extension TopicCell {
 // MARK: - private
 
 extension TopicCell {
+
+    /// iOS 26+：文章卡片包 Liquid Glass 圆角底（与侧栏菜单一致），行间自然露出背景形成间距
+    fileprivate func attachGlassBackground() {
+        guard #available(iOS 26.0, *) else {
+            return
+        }
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        let glass = UIVisualEffectView(effect: UIGlassEffect())
+        glass.isUserInteractionEnabled = false
+        glass.layer.cornerRadius = 14
+        glass.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(glass)
+        contentView.sendSubviewToBack(glass)
+        NSLayoutConstraint.activate([
+            glass.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
+            glass.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
+            glass.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            glass.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+        ])
+    }
     
     fileprivate func setupConstraints() {
         avatarImageView.snp.makeConstraints { (make) in
@@ -172,8 +217,15 @@ extension TopicCell {
             make.left.equalTo(avatarImageView)
             make.right.equalTo(repliesCountLabel.snp.left)
             make.top.equalTo(avatarImageView.snp.bottom).offset(5)
+        }
+        summaryLabel.snp.makeConstraints { (make) in
+            make.left.right.equalTo(titleLabel)
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
             make.bottom.equalToSuperview().inset(kContentPadding)
         }
+        // 摘要为空（nil）时不能把行高撑高：压缩到 0
+        summaryLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        summaryLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         repliesCountLabel.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel)
             make.right.equalToSuperview().inset(kContentPadding)
@@ -186,16 +238,18 @@ extension TopicCell {
         let attributes = [NSAttributedString.Key.font : titleFont]
         let attributedString = NSMutableAttributedString(string: data.title, attributes: attributes)
 
-        func addIcon(systemName: String) {
-            // SF Symbol 转换有开销，按深浅色+字号各缓存一份避免滚动时重复生成
-            guard let attachment = TopicCell.iconAttachment(systemName, for: traitCollection.userInterfaceStyle, size: kTitleTextSize * fontScale) else {
+        func addIcon(systemName: String, color: UIColor = kNodeColor) {
+            // SF Symbol 转换有开销，按深浅色+字号+颜色各缓存一份避免滚动时重复生成
+            guard let attachment = TopicCell.iconAttachment(systemName, color: color, for: traitCollection.userInterfaceStyle, size: kTitleTextSize * fontScale) else {
                 return
             }
             attributedString.append(NSAttributedString(attachment: attachment))
         }
 
         if data.excellent {
-            addIcon(systemName: "seal.fill")
+            // 精华帖：橙红奖章图标（rosette），iOS 16 以下无此符号回退印章
+            let symbolName = UIImage(systemName: "rosette") != nil ? "rosette" : "seal.fill"
+            addIcon(systemName: symbolName, color: kExcellentColor)
         }
         if data.closedAt != nil {
             addIcon(systemName: "checkmark.circle.fill")
@@ -205,14 +259,14 @@ extension TopicCell {
     }
 
     private static var iconAttachments: [UIUserInterfaceStyle: [String: NSTextAttachment]] = [:]
-    private static func iconAttachment(_ systemName: String, for style: UIUserInterfaceStyle, size: CGFloat) -> NSTextAttachment? {
-        let cacheKey = "\(systemName)-\(Int(size * 10))"
+    private static func iconAttachment(_ systemName: String, color: UIColor, for style: UIUserInterfaceStyle, size: CGFloat) -> NSTextAttachment? {
+        let cacheKey = "\(systemName)-\(color.description)-\(Int(size * 10))"
         if let cached = iconAttachments[style]?[cacheKey] {
             return cached
         }
-        let color = kNodeColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
+        let resolvedColor = color.resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
         guard let image = UIImage(systemName: systemName)?
-            .withTintColor(color, renderingMode: .alwaysOriginal) else {
+            .withTintColor(resolvedColor, renderingMode: .alwaysOriginal) else {
             return nil
         }
         let attachment = NSTextAttachment()

@@ -27,8 +27,12 @@ class RootTopicsViewController: TopicsViewController {
     fileprivate static let segmentTrackColor = UIColor { trait in
         trait.userInterfaceStyle == .dark ? UIColor(white: 0.16, alpha: 1) : UIColor(white: 0.93, alpha: 1)
     }
+    /// 选中胶囊：iOS 26+ 玻璃底上用较实的白雾高亮（配合投影浮起）；旧系统保持实色
     fileprivate static let segmentSelectedColor = UIColor { trait in
-        trait.userInterfaceStyle == .dark ? UIColor(white: 0.30, alpha: 1) : UIColor.white
+        if #available(iOS 26.0, *) {
+            return trait.userInterfaceStyle == .dark ? UIColor(white: 1.0, alpha: 0.30) : UIColor(white: 1.0, alpha: 0.92)
+        }
+        return trait.userInterfaceStyle == .dark ? UIColor(white: 0.30, alpha: 1) : UIColor.white
     }
 
     fileprivate lazy var avatarButton: UIButton = {
@@ -299,17 +303,53 @@ extension RootTopicsViewController {
         container.addSubview(titleLabel)
 
         let newTopicButton = UIButton(type: .system)
-        let pencilConfig = UIImage.SymbolConfiguration(weight: .light)
+        let pencilConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .light)
         newTopicButton.setImage(UIImage(systemName: "square.and.pencil", withConfiguration: pencilConfig), for: .normal)
         newTopicButton.tintColor = PRIMARY_COLOR
         newTopicButton.addTarget(self, action: #selector(newTopicAction), for: .touchUpInside)
         newTopicButton.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(newTopicButton)
+
+        // iOS 26+：写文章按钮包一层 Liquid Glass 圆形底，与分段条/快捷组统一质感
+        let newTopicHolder: UIView
+        if #available(iOS 26.0, *) {
+            let glassHolder = UIVisualEffectView(effect: UIGlassEffect())
+            glassHolder.translatesAutoresizingMaskIntoConstraints = false
+            glassHolder.layer.cornerRadius = 16
+            newTopicButton.translatesAutoresizingMaskIntoConstraints = false
+            glassHolder.contentView.addSubview(newTopicButton)
+            NSLayoutConstraint.activate([
+                newTopicButton.topAnchor.constraint(equalTo: glassHolder.contentView.topAnchor),
+                newTopicButton.bottomAnchor.constraint(equalTo: glassHolder.contentView.bottomAnchor),
+                newTopicButton.leadingAnchor.constraint(equalTo: glassHolder.contentView.leadingAnchor),
+                newTopicButton.trailingAnchor.constraint(equalTo: glassHolder.contentView.trailingAnchor),
+            ])
+            container.addSubview(glassHolder)
+            newTopicHolder = glassHolder
+        } else {
+            container.addSubview(newTopicButton)
+            newTopicHolder = newTopicButton
+        }
 
         let track = UIView()
-        track.backgroundColor = Self.segmentTrackColor
-        track.layer.cornerRadius = 12
         track.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 26.0, *) {
+            // Liquid Glass 分段条底：与右下角快捷组同一套玻璃方案
+            track.backgroundColor = .clear
+            let glassView = UIVisualEffectView(effect: UIGlassEffect())
+            glassView.translatesAutoresizingMaskIntoConstraints = false
+            glassView.isUserInteractionEnabled = false
+            glassView.layer.cornerRadius = 12
+            track.addSubview(glassView)
+            NSLayoutConstraint.activate([
+                glassView.topAnchor.constraint(equalTo: track.topAnchor),
+                glassView.bottomAnchor.constraint(equalTo: track.bottomAnchor),
+                glassView.leadingAnchor.constraint(equalTo: track.leadingAnchor),
+                glassView.trailingAnchor.constraint(equalTo: track.trailingAnchor),
+            ])
+        } else {
+            track.backgroundColor = Self.segmentTrackColor
+            track.layer.cornerRadius = 12
+        }
         container.addSubview(track)
 
         let stack = UIStackView()
@@ -332,10 +372,10 @@ extension RootTopicsViewController {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
-            newTopicButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            newTopicButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -18),
-            newTopicButton.widthAnchor.constraint(equalToConstant: 32),
-            newTopicButton.heightAnchor.constraint(equalToConstant: 32),
+            newTopicHolder.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            newTopicHolder.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -18),
+            newTopicHolder.widthAnchor.constraint(equalToConstant: 32),
+            newTopicHolder.heightAnchor.constraint(equalToConstant: 32),
             track.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
             track.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
             track.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
@@ -370,6 +410,11 @@ extension RootTopicsViewController {
             button.setTitleColor(selected ? UIColor.label : UIColor.secondaryLabel, for: .normal)
             button.backgroundColor = selected ? Self.segmentSelectedColor : .clear
             button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: selected ? .semibold : .regular)
+            // 选中胶囊带轻微投影"浮起"，与未选中项拉开层次
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.layer.shadowOpacity = selected ? 0.18 : 0
+            button.layer.shadowRadius = 3
+            button.layer.shadowOffset = CGSize(width: 0, height: 1)
         }
     }
 
