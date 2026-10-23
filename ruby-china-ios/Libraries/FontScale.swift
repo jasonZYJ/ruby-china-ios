@@ -9,7 +9,7 @@ import UIKit
 
 enum FontScale {
     /// 可用档位（升序）
-    static let steps: [CGFloat] = [0.8, 1.0, 1.2, 1.4, 1.6]
+    static let steps: [CGFloat] = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6]
     /// 列表页 / 详情页各自的 UserDefaults key
     static let keys = (list: "listFontScale", detail: "detailFontScale")
 

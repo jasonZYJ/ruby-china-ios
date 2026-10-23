@@ -59,6 +59,10 @@
 "type recent" = "Recent";
 "type no reply" = "No reply";
 "type excellent" = "Excellent";
+"seg default" = "Default";
+"seg recent" = "Latest";
+"seg popular" = "Hot";
+"seg excellent" = "Excellent";
 "appearance mode" = "Appearance";
 "appearance system" = "Match System";
 "appearance light" = "Light";

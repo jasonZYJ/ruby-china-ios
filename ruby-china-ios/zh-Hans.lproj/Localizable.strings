@@ -59,6 +59,10 @@
 "type recent" = "最新发布";
 "type no reply" = "无人问津";
 "type excellent" = "优质帖子";
+"seg default" = "默认";
+"seg recent" = "最新";
+"seg popular" = "热门";
+"seg excellent" = "精华";
 "appearance mode" = "深浅色模式";
 "appearance system" = "跟随系统";
 "appearance light" = "浅色";
