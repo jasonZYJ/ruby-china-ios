@@ -20,23 +20,20 @@ class QuickActionsPanel: UIVisualEffectView {
     fileprivate var actionMap: [UIControl: () -> Void] = [:]
 
     init(items: [Item]) {
-        var effect: UIVisualEffect = UIBlurEffect(style: .systemThinMaterial)
-        var useGlass = false
+        // Liquid Glass 质感保留；UIGlassEffect 本体透明度偏低（挡内容），
+        // 用整体 alpha 降到 0.82 折中：玻璃感在、又能隐约透出底下内容
         if #available(iOS 26.0, *) {
-            // Liquid Glass：与系统 toolbar 按钮同款玻璃（折射+边缘高光）
-            effect = UIGlassEffect()
-            useGlass = true
-        }
-        super.init(effect: effect)
-        layer.cornerRadius = 22
-        if useGlass {
+            super.init(effect: UIGlassEffect())
+            alpha = 0.82
             // glass 自带形状渲染，clip 会破坏折射边缘
             clipsToBounds = false
         } else {
+            super.init(effect: UIBlurEffect(style: .systemThinMaterial))
             clipsToBounds = true
             layer.borderWidth = 0.5
             layer.borderColor = UIColor.separator.cgColor
         }
+        layer.cornerRadius = 22
 
         var arranged: [UIView] = []
         for (index, item) in items.enumerated() {
